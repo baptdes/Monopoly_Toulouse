@@ -44,5 +44,6 @@ public class VuePlateau extends JPanel {
         frame.setSize(frameWidth, frameHeight);
         // Rendre la fenêtre visible
         frame.setVisible(true);
+        //test
     }
 }
