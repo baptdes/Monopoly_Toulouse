@@ -1,4 +1,4 @@
-package Affichage_plateau;
+package Interface_graphique;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,7 +7,7 @@ public class VuePlateau extends JPanel {
 
     public VuePlateau(int frameWidth, int frameHeight) {
         // Chargement de l'image du plateau
-        ImageIcon jpgPlateau = new ImageIcon("monopoly-classique-plateau.jpg");
+        ImageIcon jpgPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
         Image image = jpgPlateau.getImage(); // Chargement de l'image
 
         // Redimensionner l'image pour qu'elle prenne toute la hauteur donnée
@@ -33,8 +33,8 @@ public class VuePlateau extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //Dimension de la fenêtre
-        int frameWidth = 1000;
-        int frameHeight = 1000;
+        int frameWidth = 800;
+        int frameHeight = 800;
 
         // Ajout de la VuePlateau à la fenêtre
         VuePlateau panel = new VuePlateau(frameWidth,frameHeight);
@@ -44,6 +44,5 @@ public class VuePlateau extends JPanel {
         frame.setSize(frameWidth, frameHeight);
         // Rendre la fenêtre visible
         frame.setVisible(true);
-        //test commit
     }
 }
