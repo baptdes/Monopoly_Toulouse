@@ -1,33 +1,36 @@
 package Interface_graphique;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class VuePlateau extends JPanel {
 
-    public static Font textFont = new Font("Verdana", Font.PLAIN, 12);
-    public static Font titleFont = new Font("Verdana", Font.BOLD, 15);
-    final private static int lengthFrame = 800;
-    final private int[][] positionCases = {{1, 2}, {3, 4}, {5, 6}};
-    private int casePion;
-    
+    // Constantes publiques pour le style des textes
+    final public static Font textFont = new Font("Verdana", Font.PLAIN, 12);
+    final public static Font titleFont = new Font("Verdana", Font.BOLD, 15);
 
-    public VuePlateau(int casePion, String[] nomsJoueurs) {
+    // Constante
+    final private static int lengthFrame = 850;
+    final public static int lengthPion = 75;
+
+    //Attributs
+    private int[] cases_occupées = new int[40];
+    private ArrayList<?> joueurs;
+    private Pion[] pions;
+
+    public VuePlateau(Pion[] pions, String[] nomsJoueurs) {
+        this.pions = pions;
+
 
         // Chargement de l'image du plateau
-        ImageIcon jpgPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
-        Image image = jpgPlateau.getImage(); // Chargement de l'image
+        ImageIcon pngPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
 
         // Redimensionner l'image pour qu'elle prenne toute la hauteur donnée
-        int imageWidth = (int) (lengthFrame * ((double) jpgPlateau.getIconWidth() / jpgPlateau.getIconHeight()));
-        Image scaledImage = image.getScaledInstance(imageWidth, lengthFrame, Image.SCALE_SMOOTH);
+        Image scaledPlateau = pngPlateau.getImage().getScaledInstance(lengthFrame, lengthFrame, Image.SCALE_SMOOTH);
 
         // Création d'un JLabel avec l'image redimensionnée
-        JLabel plateau = new JLabel(new ImageIcon(scaledImage));
+        JLabel plateau = new JLabel(new ImageIcon(scaledPlateau));
         plateau.setLayout(null); // Permet de positionner les éléments absolument
         this.add(plateau);
 
@@ -40,6 +43,12 @@ public class VuePlateau extends JPanel {
         JButton bFinPartie = new ModernButton("Finir la partie",new Color(123, 36, 28),Color.white);
         bFinPartie.setBounds(500, 490, 140, 35);
         plateau.add(bFinPartie);
+
+        // Ajout d'un pion
+        for (int i = 0; i < pions.length;i++){
+            plateau.add(pions[i]);
+            cases_occupées[pions[i].getPosition()]++;
+        }
 
         // Position horizontale initiale pour les joueurs
         int posInit = 120;
@@ -58,6 +67,12 @@ public class VuePlateau extends JPanel {
         }
     }
 
+    void deplacerPion(int nbPion,int nbCase){
+        cases_occupées[pions[nbPion].getPosition()]--;
+        pions[nbPion].setPositionPion(nbCase, cases_occupées[nbCase]);
+        cases_occupées[pions[nbPion].getPosition()]++;
+    }
+
     public static void main(String[] args) {
         // Création d'une fenêtre JFrame
         JFrame frame = new JFrame("VuePlateau Example");
@@ -65,7 +80,10 @@ public class VuePlateau extends JPanel {
 
         // Ajout de la VuePlateau à la fenêtre
         String[] nomsJoueurs = {"Pépé","Mémé","Papa","Maman"};
-        VuePlateau panel = new VuePlateau(2,nomsJoueurs);
+        Pion pion1 = new Pion(5,0);
+        Pion pion2 = new Pion(5,1);
+        Pion[] liste_pions = {pion1,pion2};
+        VuePlateau panel = new VuePlateau(liste_pions,nomsJoueurs);
         frame.add(panel);
 
         // Dimension de la fenêtre
