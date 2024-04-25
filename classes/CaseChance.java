@@ -21,8 +21,8 @@ public class CaseChance implements Case {
 
         // Exécute l'action de la carte tirée
         carte.actionCarte(joueur);
-
-        
+        // Affichage de la carte
+        afficherCarte(carte);
     }
 
     private Carte tirerCarteChance() {
