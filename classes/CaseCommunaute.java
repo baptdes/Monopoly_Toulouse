@@ -13,20 +13,14 @@ public class CaseCommunaute implements Case {
 
     @Override
     public void action(JoueurMonopoly joueur) {
-        /**
-        *Supposons que nous avons une méthode pour tirer une carte
-        */
+        //Supposons que nous avons une méthode pour tirer une carte
         Carte carte = tirerCarteCommunaute();
         System.out.println(joueur.getNom() + " tire la carte " + carte.getNom());
-
-        /**
-	* Supposons que les cartes ont une méthode pour exécuter une action
-	*/
+	    
+	//Supposons que les cartes ont une méthode pour exécuter une action
         carte.executerAction(joueur);
 
-        /**
-	* Affichez les informations sur la carte tirée
-        */
+	//Affichez les informations sur la carte tirée
 	afficherCarte(carte);
     }
 
