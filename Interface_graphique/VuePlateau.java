@@ -2,6 +2,7 @@ package Interface_graphique;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class VuePlateau extends JPanel {
@@ -19,7 +20,7 @@ public class VuePlateau extends JPanel {
     private ArrayList<?> joueurs;
     private Pion[] pions;
 
-    public VuePlateau(Pion[] pions, String[] nomsJoueurs) {
+    public VuePlateau(Pion[] pions, Panneau_joueur[] joueurs) {
         this.pions = pions;
 
 
@@ -38,6 +39,12 @@ public class VuePlateau extends JPanel {
         JButton bFinTour = new ModernButton("Finir le tour",Color.darkGray,Color.white);
         bFinTour.setBounds(500-140, 490, 130, 35);
         plateau.add(bFinTour);
+        bFinTour.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                joueurs[0].addPropriété("Ca marche !");
+            }
+        });
 
         // Ajout du bouton fin de la partie
         JButton bFinPartie = new ModernButton("Finir la partie",new Color(123, 36, 28),Color.white);
@@ -53,16 +60,10 @@ public class VuePlateau extends JPanel {
         // Position horizontale initiale pour les joueurs
         int posInit = 120;
 
-        // Création du tableau de JPanel pour les joueurs
-        JPanel[] joueurPanels = new JPanel[nomsJoueurs.length];
-
-        // Création et affichage des JPanel pour chaque joueur
-        String[] propriétés = {"Rue des filatiers","Hazebrouck","Toulouse"};
-        String[] gares = {"Gare Matabiau"};
-        for (int i = 0; i < nomsJoueurs.length; i++) {
-            joueurPanels[i] = new Panneau_joueur(nomsJoueurs[i],1000,propriétés,gares);
-            joueurPanels[i].setBounds(posInit, 120, 140, 200); // Position et taille du JPanel du joueur
-            plateau.add(joueurPanels[i]);
+        // Affichage des panneaux pour chaque joueur
+        for (int i = 0; i < joueurs.length; i++) {
+            joueurs[i].setBounds(posInit, 120, 140, 200); // Position et taille du JPanel du joueur
+            plateau.add(joueurs[i]);
             posInit += 150; // Espacement horizontal entre les joueurs
         }
     }
@@ -78,12 +79,20 @@ public class VuePlateau extends JPanel {
         JFrame frame = new JFrame("VuePlateau Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Ajout de la VuePlateau à la fenêtre
+        // Création du tableau de JPanel pour les joueurs
         String[] nomsJoueurs = {"Pépé","Mémé","Papa","Maman"};
-        Pion pion1 = new Pion(5,0);
-        Pion pion2 = new Pion(5,1);
+        Panneau_joueur[] joueurPanels = new Panneau_joueur[nomsJoueurs.length];
+        // Création et affichage des JPanel pour chaque joueur
+        String[] propriétés = {"Rue des filatiers","Hazebrouck","Toulouse"};
+        String[] gares = {"Gare Matabiau"};
+        for (int i = 0; i < nomsJoueurs.length; i++) {
+            joueurPanels[i] = new Panneau_joueur(nomsJoueurs[i],1000,propriétés,gares);
+        }
+
+        Pion pion1 = new Pion(1,0);
+        Pion pion2 = new Pion(1,1);
         Pion[] liste_pions = {pion1,pion2};
-        VuePlateau panel = new VuePlateau(liste_pions,nomsJoueurs);
+        VuePlateau panel = new VuePlateau(liste_pions,joueurPanels);
         frame.add(panel);
 
         // Dimension de la fenêtre
