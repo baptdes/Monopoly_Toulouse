@@ -32,13 +32,16 @@ public class CaseTerrain implements Case {
 	public int getId() {
 		return this.id;
 	}
+	public int getprixmaison() {
+		return this.prixmaison;
+	}
 	public String getcouleur() {
 		return this.couleur;
 	}
 	public int getnbrmaison() {
 		return this.nbrmaison;
 	}
-	public int getprixaachat() {
+	public int getprixachat() {
 		return this.valeurachat;
 	}
 	public JoueurMonopoly getprop() {
@@ -57,10 +60,7 @@ public class CaseTerrain implements Case {
 	}
 	public boolean peutMettreMaison() {
 		return (this.nbrmaison < 5); 
-		// ici je vérifie que la possibilité d'ajouter une maison en termes
-		// de capacité maximale de maison ( 5 maisons max = 4 maisons + 1 maison = 5 hotel, je garde que 
-		//le terme maison, par contre faut vérifier aussi une autre condition qui est d'avoir tout les
-		//terrains de la même couleur avant de pouvoir ajouter une maison, je vais réfléchir après comment
+		
 	}
 	public void ajouterMaison() {
 		if (peutMettreMaison()) {
@@ -68,6 +68,10 @@ public class CaseTerrain implements Case {
 		} else {
 			System.out.println("Nombre maximum de maisons atteint.");
 		}
+	}
+	public void vendremaison() {
+		assert(this.nbrmaison > 0);
+		this.nbrmaison--;
 	}
 	 public ArrayList<Integer> getLoyer(){
 		 return this.Loyer;
