@@ -9,7 +9,7 @@ public class ListeLabel extends JPanel {
 
     private ArrayList<JLabel> liste = new ArrayList<JLabel>();
 
-    public ListeLabel(String title, JLabel[] liste) {
+    public ListeLabel(String title, JLabel[] liste, Color titreColor) {
         super();
 
         this.setOpaque(false);
@@ -19,7 +19,14 @@ public class ListeLabel extends JPanel {
         JLabel titre = new JLabel(title);
         titre.setAlignmentX(Component.CENTER_ALIGNMENT);
         titre.setFont(VuePlateau.titleFont);
-        this.add(titre);
+
+        JPanel titrePanel = new JPanel();
+        titrePanel.setBackground(titreColor);
+        titrePanel.setLayout(new BoxLayout(titrePanel, BoxLayout.Y_AXIS));
+        titrePanel.add(Box.createVerticalStrut(0));
+        titrePanel.add(titre);
+
+        this.add(titrePanel);
 
         // Espace entre titre et liste
         this.add(Box.createVerticalStrut(4));
@@ -33,8 +40,8 @@ public class ListeLabel extends JPanel {
         }
     }
 
-    public ListeLabel(String title, String[] stringListe) {     
-        this(title,toLabels(stringListe));
+    public ListeLabel(String title, String[] stringListe,Color titreColor) {     
+        this(title,toLabels(stringListe),titreColor);
     }
 
     private static JLabel[] toLabels(String[] stringListe) {

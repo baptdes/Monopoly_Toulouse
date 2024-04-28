@@ -18,21 +18,27 @@ public class Panneau_joueur extends RoundedPanel {
     */
     public Panneau_joueur(String nomJoueur,int argent, String[] propriétés, String[] gares) {
         // Créer un RoundedPanel pour le joueur
-        super(15,Color.white);
+        super(15,Color.decode("#fae5d3"));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(6,6,6,6));
+        this.setBorder(new EmptyBorder(6,1,6,1));
     
         // Nom du joueur
         JLabel nomJoueurLabel = new JLabel(nomJoueur);
         nomJoueurLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomJoueurLabel.setOpaque(false);
-        nomJoueurLabel.setFont(VuePlateau.titleFont);
+        nomJoueurLabel.setFont(VuePlateau.nomJoueurFont);
 
-        this.proprietesPanel = new ListeLabel("Propriétés",propriétés);
-        this.garesPanel = new ListeLabel("Gares",gares);
+        JPanel nomJoueurPanel = new JPanel();
+        nomJoueurPanel.setBackground(Color.decode("#f0b27a"));
+        nomJoueurPanel.setLayout(new BoxLayout(nomJoueurPanel, BoxLayout.Y_AXIS));
+        nomJoueurPanel.add(Box.createVerticalStrut(0));
+        nomJoueurPanel.add(nomJoueurLabel);
+
+        this.proprietesPanel = new ListeLabel("Propriétés",propriétés,Color.decode("#f0b27a"));
+        this.garesPanel = new ListeLabel("Gares",gares,Color.decode("#f0b27a"));
         
         //Ajout et agencement des différents composants
-        this.add(nomJoueurLabel);
+        this.add(nomJoueurPanel);
         this.add(Box.createVerticalStrut(10));
         this.add(créerArgentPanel(argent));
         this.add(Box.createVerticalStrut(10));
@@ -50,24 +56,28 @@ public class Panneau_joueur extends RoundedPanel {
         // Titre "Argent"
         JLabel titreArgentLabel = new JLabel("Argent");
         titreArgentLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titreArgentLabel.setOpaque(false);
         titreArgentLabel.setFont(VuePlateau.titleFont);
 
+        JPanel titre = new JPanel();
+        titre.setBackground(Color.decode("#abebc6"));
+        titre.setLayout(new BoxLayout(titre, BoxLayout.Y_AXIS));
+        titre.add(Box.createVerticalStrut(0));
+        titre.add(titreArgentLabel);
+    
         // Montant du joueur
         this.argent = new JLabel(argent + " M$");
         this.argent.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.argent.setOpaque(false);
-        this.argent.setFont(VuePlateau.textFont);
-
+        this.argent.setFont(VuePlateau.argentFont);
+    
         // Création du Panel
-        RoundedPanel argentPanel = new RoundedPanel(15,Color.white);
+        JPanel argentPanel = new JPanel();
+        argentPanel.setBackground(Color.decode("#d5f5e3"));
         argentPanel.setLayout(new BoxLayout(argentPanel, BoxLayout.Y_AXIS));
-        argentPanel.setOpaque(false);
         //Ajout des éléments dans le panel
-        argentPanel.add(titreArgentLabel);
+        argentPanel.add(titre); // Ajouter le JPanel contenant le titre
         argentPanel.add(Box.createVerticalStrut(4));
         argentPanel.add(this.argent);
-
+    
         return argentPanel;
     }
 
