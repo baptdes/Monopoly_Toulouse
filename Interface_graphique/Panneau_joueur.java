@@ -7,30 +7,44 @@ import javax.swing.border.EmptyBorder;
 
 /** Classe qui sert à créer un panneau qui présente les informations d'un joueur */
 public class Panneau_joueur extends RoundedPanel {
+
+    private JLabel argent;
+    private ListeLabel proprietesPanel;
+    private ListeLabel compagniesPanel;
+    private ListeLabel garesPanel;
     
     /** Méthode pour créer le JPanel d'un joueur avec son nom, son argent et ses propriétés 
      * @param nomJoueur Nom du joueur
     */
     public Panneau_joueur(String nomJoueur,int argent, String[] propriétés, String[] gares) {
         // Créer un RoundedPanel pour le joueur
-        super(15,Color.white);
+        super(15,Color.decode("#fae5d3"));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(new EmptyBorder(6,6,6,6));
+        this.setBorder(new EmptyBorder(6,1,6,1));
     
         // Nom du joueur
         JLabel nomJoueurLabel = new JLabel(nomJoueur);
         nomJoueurLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomJoueurLabel.setOpaque(false);
-        nomJoueurLabel.setFont(VuePlateau.titleFont);
+        nomJoueurLabel.setFont(VuePlateau.nomJoueurFont);
+
+        JPanel nomJoueurPanel = new JPanel();
+        nomJoueurPanel.setBackground(Color.decode("#f0b27a"));
+        nomJoueurPanel.setLayout(new BoxLayout(nomJoueurPanel, BoxLayout.Y_AXIS));
+        nomJoueurPanel.add(Box.createVerticalStrut(0));
+        nomJoueurPanel.add(nomJoueurLabel);
+
+        this.proprietesPanel = new ListeLabel("Propriétés",propriétés,Color.decode("#f0b27a"));
+        this.garesPanel = new ListeLabel("Gares",gares,Color.decode("#f0b27a"));
         
         //Ajout et agencement des différents composants
-        this.add(nomJoueurLabel);
+        this.add(nomJoueurPanel);
         this.add(Box.createVerticalStrut(10));
         this.add(créerArgentPanel(argent));
         this.add(Box.createVerticalStrut(10));
-        this.add(créerPropriétéPanel(propriétés));
+        this.add(proprietesPanel);
         this.add(Box.createVerticalStrut(10));
-        this.add(créerGaresPanel(gares));
+        this.add(garesPanel);
     }
     
     /**
@@ -42,86 +56,40 @@ public class Panneau_joueur extends RoundedPanel {
         // Titre "Argent"
         JLabel titreArgentLabel = new JLabel("Argent");
         titreArgentLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titreArgentLabel.setOpaque(false);
         titreArgentLabel.setFont(VuePlateau.titleFont);
 
+        JPanel titre = new JPanel();
+        titre.setBackground(Color.decode("#abebc6"));
+        titre.setLayout(new BoxLayout(titre, BoxLayout.Y_AXIS));
+        titre.add(Box.createVerticalStrut(0));
+        titre.add(titreArgentLabel);
+    
         // Montant du joueur
-        JLabel montantArgentLabel = new JLabel(argent + " M$");
-        montantArgentLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        montantArgentLabel.setOpaque(false);
-        montantArgentLabel.setFont(VuePlateau.textFont);
-
+        this.argent = new JLabel(argent + " M$");
+        this.argent.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.argent.setFont(VuePlateau.argentFont);
+    
         // Création du Panel
-        RoundedPanel argentPanel = new RoundedPanel(15,Color.white);
+        JPanel argentPanel = new JPanel();
+        argentPanel.setBackground(Color.decode("#d5f5e3"));
         argentPanel.setLayout(new BoxLayout(argentPanel, BoxLayout.Y_AXIS));
-        argentPanel.setOpaque(false);
         //Ajout des éléments dans le panel
-        argentPanel.add(titreArgentLabel);
+        argentPanel.add(titre); // Ajouter le JPanel contenant le titre
         argentPanel.add(Box.createVerticalStrut(4));
-        argentPanel.add(montantArgentLabel);
-
+        argentPanel.add(this.argent);
+    
         return argentPanel;
     }
 
-    /**
-     * Crée le panel qui présente les propriétes du joueur
-     * @param proprietes Tableau des propriétés que possédées le joueur
-     * @return JPanel qui présente les propriétes du joueur
-     */
-    private JPanel créerPropriétéPanel(String[] proprietes) {
-        // Créer un JPanel pour les propriétés
-        JPanel proprietesPanel = new JPanel();
-        proprietesPanel.setOpaque(false);
-        proprietesPanel.setLayout(new BoxLayout(proprietesPanel, BoxLayout.Y_AXIS));
-
-        // Titre des propriétés
-        JLabel titreLabel = new JLabel("Propriétés");
-        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titreLabel.setFont(VuePlateau.titleFont);
-        proprietesPanel.add(titreLabel);
-
-        //Espace entre titre et texte
-        proprietesPanel.add(Box.createVerticalStrut(4));
-
-        //Liste des propriétés
-        for (String propriete : proprietes) {
-            JLabel proprieteLabel = new JLabel(propriete);
-            proprieteLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            proprieteLabel.setFont(VuePlateau.textFont);
-            proprietesPanel.add(proprieteLabel);
-        }
-
-        return proprietesPanel;
+    public void updateArgent(int argent) {
+        this.argent.setText("" + argent);
     }
 
-        /**
-     * Crée le panel qui présente les propriétes du joueur
-     * @param gares Tableau des gares que possédées le joueur
-     * @return JPanel qui présente les propriétes du joueur
-     */
-    private JPanel créerGaresPanel(String[] gares) {
-        // Créer un JPanel pour les propriétés
-        JPanel garesPanel = new JPanel();
-        garesPanel.setOpaque(false);
-        garesPanel.setLayout(new BoxLayout(garesPanel, BoxLayout.Y_AXIS));
+    public void addPropriété(String propriété){
+        this.proprietesPanel.addList(propriété);
+    }
 
-        // Titre des propriétés
-        JLabel titreLabel = new JLabel("Gares");
-        titreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        titreLabel.setFont(VuePlateau.titleFont);
-        garesPanel.add(titreLabel);
-
-        //Espace entre titre et texte
-        garesPanel.add(Box.createVerticalStrut(4));
-
-        //Liste des gares
-        for (String gare : gares) {
-            JLabel gareLabel = new JLabel(gare);
-            gareLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            gareLabel.setFont(VuePlateau.textFont);
-            garesPanel.add(gareLabel);
-        }
-
-        return garesPanel;
+    public void removePropriété(String propriété){
+        this.proprietesPanel.removeList(propriété);
     }
 }
