@@ -1,6 +1,8 @@
 package Interface_graphique;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -8,15 +10,18 @@ import java.util.ArrayList;
 public class VuePlateau extends JFrame {
 
     // Constantes publiques pour le style des textes
-    final public static Font argentFont = new Font("DejaVu Sans", Font.PLAIN, 18);
+    final public static Font argentFont = new Font("DejaVu Sans", Font.PLAIN, 16);
     final public static Font textFont = new Font("DejaVu Sans", Font.PLAIN, 14);
-    final public static Font titleFont = new Font("DejaVu Sans", Font.BOLD, 18);
-    final public static Font nomJoueurFont = new Font("Loma", Font.BOLD, 25);
+    final public static Font titleFont = new Font("DejaVu Sans", Font.BOLD, 16);
+    final public static Font nomJoueurFont = new Font("Loma", Font.BOLD, 20);
 
-    // Constante
+    // Données sur l'image du plateau
     final private ImageIcon pngPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
-    private int originalWidth = pngPlateau.getIconWidth(); 
-    private int originalHeight = pngPlateau.getIconHeight();
+    final private int originalWidth = pngPlateau.getIconWidth(); 
+    final private int originalHeight = pngPlateau.getIconHeight();
+
+    /** Taille de référence pour calculer l'emplacement des éléments */
+    final public int refTaille = 850; 
 
     //Attributs
     private int[] cases_occupées = new int[41];
@@ -24,7 +29,9 @@ public class VuePlateau extends JFrame {
     private Pion[] pions;
     private JLabel plateau;
     private JButton bFinTour;
-    private JButton bFinPartie;    
+    private JButton bFinPartie;
+    /** Facteur pour adapter la taille des éléments à la taille de la fenêtre */
+    private double scaleFactor;
 
     public VuePlateau(Pion[] pions, Panneau_joueur[] joueurs) {
         // ---- Création de la fenêtre + paramètrages ----
@@ -75,7 +82,7 @@ public class VuePlateau extends JFrame {
         bFinPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                deplacerPion(1,pions[1].getPosition() + 1);
+                deplacerPion(0,pions[0].getPosition() - 1);
             }
         });
 
@@ -88,44 +95,69 @@ public class VuePlateau extends JFrame {
 
         /////// Les panneaux joueurs ////////
         JPanel joueursPanel = new JPanel(new GridLayout(2, 3, 10, 10));
+        // Création d'une bordure avec des marges de 10 pixels
+        Border border = BorderFactory.createEmptyBorder(5, 10, 5, 5);
+        joueursPanel.setBorder(border);
         for (int i = 0; i < joueurs.length; i++) {
             joueursPanel.add(joueurs[i]);
         }
-        this.add(Box.createHorizontalStrut(15));
         this.add(joueursPanel);
-        this.add(Box.createHorizontalStrut(15));
     }
 
-    /** Fonction pour redimensionner une image tout en conservant ses proportions d'origine  */ 
+    /** Fonction pour redimensionner une image tout en conservant ses proportions d'origine 
+     * @param image Image à redimensionner
+     * @param width Largeur voulue
+     * */ 
     private Image resizeImage(Image image, int width, int height) {
         int newWidth, newHeight;
         if (width * originalHeight < height * originalWidth) {
             newWidth = width;
             newHeight = newWidth * originalHeight / originalWidth;
+            this.scaleFactor = (double) newHeight / refTaille;
         } else {
             newWidth = height * originalWidth / originalHeight;
+            this.scaleFactor = (double) newWidth / refTaille;
             newHeight = height;
         }
         return image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
     }
 
+    /** Met à jour la taille de tous les éléments de la fenêtre */
     private void updatePlateauWidth(){
         Image scaledPlateau = resizeImage(pngPlateau.getImage(), getWidth()/2, getHeight());
         plateau.setIcon(new ImageIcon(scaledPlateau));
         for (int i = 0; i < pions.length;i++){
-            pions[i].updatePlateauWidth(getWidth()/2,cases_occupées);
+            cases_occupées[pions[i].getPosition()] = 0;
         }
-        double factor = (double) (getWidth()/2) / 850;
-        this.bFinPartie.setBounds((int) (400 * factor),(int) (525 * factor),(int) (130 * factor),(int) (35 * factor));
-        this.bFinTour.setBounds((int) (540 * factor),(int) (525 * factor),(int) (140* factor),(int) (35 * factor));
+        for (int i = 0; i < pions.length;i++){
+            pions[i].updatePlateauWidth(scaleFactor,cases_occupées[pions[i].getPosition()]);
+            cases_occupées[pions[i].getPosition()]++;
+        }
+        this.bFinPartie.setBounds((int) (400 * scaleFactor),(int) (525 * scaleFactor),(int) (130 * scaleFactor),(int) (35 * scaleFactor));
+        this.bFinTour.setBounds((int) (540 * scaleFactor),(int) (525 * scaleFactor),(int) (140* scaleFactor),(int) (35 * scaleFactor));
     }
 
-    void deplacerPion(int nbPion,int nbCase){
+    /** Déplace le pion sur le plateau dans la fenêtre principale 
+     * @param nbPion Numéro du pions
+     * @param nbCase Numéro de la case sur laquelle déplacer le pion
+    */
+    public void deplacerPion(int nbPion,int nbCase){
         if (nbPion > 40 || nbPion < 0){
             throw new CaseInvalideException();
         }
         cases_occupées[pions[nbPion].getPosition()]--;
-        pions[nbPion].setPositionPion(nbCase, cases_occupées);
+        if (cases_occupées[nbCase] > 0){
+            cases_occupées[nbCase] = 0;
+            for (int i = 0; i < pions.length;i++){
+                if (pions[i].getPosition() == nbCase){
+                    pions[i].updatePlateauWidth(scaleFactor,cases_occupées[pions[i].getPosition()]);
+                    cases_occupées[nbCase]++;
+                }
+            }
+        }
+        pions[nbPion].setPositionPion(nbCase, cases_occupées[nbCase]);
+        System.out.println("Occupation : " + cases_occupées[nbCase]);
+        System.out.println("Nb case : " + nbCase);
         cases_occupées[pions[nbPion].getPosition()]++;
     }
 
@@ -140,9 +172,11 @@ public class VuePlateau extends JFrame {
             joueurPanels[i] = new Panneau_joueur(nomsJoueurs[i],1000,propriétés,gares);
         }
 
-        Pion pion1 = new Pion(1,0,850);
-        Pion pion2 = new Pion(1,1,850);
-        Pion[] liste_pions = {pion1,pion2};
+        Pion pion1 = new Pion(0,0,Color.red);
+        Pion pion2 = new Pion(0,1,Color.green);
+        Pion pion3 = new Pion(0,2,Color.pink);
+        Pion pion4 = new Pion(0,3,Color.yellow);
+        Pion[] liste_pions = {pion1,pion2,pion3,pion4};
         VuePlateau frame = new VuePlateau(liste_pions,joueurPanels);
         // Dimension de la fenêtre
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
