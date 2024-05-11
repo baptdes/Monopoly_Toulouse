@@ -1,0 +1,32 @@
+
+public class CaseChance implements Case {
+    private String nom;
+
+    public CaseChance() {
+        this.nom = "Chance";
+    }
+
+    @Override
+    public String getNom() {
+        return this.nom;
+    }
+
+    @Override
+    public void action(JoueurMonopoly joueur) {
+        // Supposons que nous avons une méthode pour tirer une carte de chance
+        Carte carte = tirerCarteChance();
+
+        // les informations de la carte tirée
+        System.out.println(joueur.getNom() + " tire la carte " + carte.getNom());
+
+        // Exécute l'action de la carte tirée
+        carte.actionCarte(joueur);
+        // Affichage de la carte
+        afficherCarte(carte);
+    }
+
+    private Carte tirerCarteChance() {
+        // La logique pour tirer une carte chance du jeu
+        return new CarteChance();
+    }
+}
