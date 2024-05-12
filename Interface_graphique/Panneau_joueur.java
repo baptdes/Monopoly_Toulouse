@@ -7,7 +7,7 @@ import javax.swing.border.EmptyBorder;
 
 /** Classe qui sert à créer un panneau qui présente les informations d'un joueur */
 public class Panneau_joueur extends RoundedPanel {
-
+    
     private JLabel argent;
     private ListeLabel proprietesPanel;
     private ListeLabel compagniesPanel;
@@ -45,6 +45,10 @@ public class Panneau_joueur extends RoundedPanel {
         this.add(proprietesPanel);
         this.add(Box.createVerticalStrut(10));
         this.add(garesPanel);
+    }
+
+    public Panneau_joueur(String nomJoueur, int argent){
+        this(nomJoueur, argent, new String[0], new String[0]);
     }
     
     /**
@@ -91,5 +95,13 @@ public class Panneau_joueur extends RoundedPanel {
 
     public void removePropriété(String propriété){
         this.proprietesPanel.removeList(propriété);
+    }
+
+    public void addGare(String gares){
+        this.garesPanel.addList(gares);
+    }
+
+    public void removeGare(String gares){
+        this.garesPanel.removeList(gares);
     }
 }

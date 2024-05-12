@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Interface_graphique.Panneau_joueur;
+
 public class JoueurMonopoly{
 	
 		private String nom;
@@ -17,6 +19,7 @@ public class JoueurMonopoly{
 		private ArrayList<CaseGare> gares;
 		private ArrayList<CaseService> service;
 		private Map<String, List<CaseTerrain>> terrainsparcouleur;
+		private Panneau_joueur affichage;
 
 		
 		public JoueurMonopoly(String nom, int id, int argent) {
@@ -32,6 +35,11 @@ public class JoueurMonopoly{
 			this.terrainsparcouleur = new HashMap<String, List<CaseTerrain>>();
 			this.estBanqueroute = false;
 			this.enPrison = false;
+			this.affichage = new Panneau_joueur(nom,argent);
+		}
+
+		public Panneau_joueur getPanel(){
+			return this.affichage;
 		}
 		
 		public String getNom() {
@@ -109,10 +117,12 @@ public class JoueurMonopoly{
 				if (terrainsparcouleur.containsKey(terrain.getcouleur())) {
 					List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
 					terrains.add(terrain);
+					affichage.addPropriété(terrain.getNom());
 					terrainsparcouleur.replace(terrain.getcouleur(),terrains);
 				} else {
 					List<CaseTerrain> terrains = new ArrayList<CaseTerrain>();
 					terrains.add(terrain);
+					affichage.addPropriété(terrain.getNom());
 					terrainsparcouleur.put(terrain.getcouleur(), terrains);
 				}				
 				this.argent -= terrain.getprixachat();				
@@ -175,6 +185,7 @@ public class JoueurMonopoly{
 			assert(gare != null && this.argent > gare.getprixachat());
 			if (gare.peutachetergare()) {
 				gares.add(gare);
+				affichage.addGare(gare.getNom());
 				this.argent -= gare.getprixachat();
 			}else {
 				System.out.println("Cette gare appartient à un autre joueur");
