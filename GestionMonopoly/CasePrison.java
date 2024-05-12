@@ -1,54 +1,46 @@
-package Classes;
+package GestionMonopoly;
 
 public class CasePrison extends Case {
 
-   private static final int AMENDE_PRISON = -50;  
+   private static final int AMENDE_PRISON = 50;
 
 
-    public CasePrison(String nom, int id, boolean estPrisonnier, int toursEnPrison) {
+    public CasePrison(String nom, int id) {
     	super(nom, id);
-       
-    }
-   
-    public int gettoursEnPrison(JoueurMonopoly joueur) {
-        return joueur.gettoursprison();
-    }
-    
+    }  
     
     public void entrerEnPrison(JoueurMonopoly joueur) {
-        joueur.getenprison() = true;
-        this.toursEnPrison = 0; 
+        joueur.setEstPrison(true);
+        joueur.setToursEnPrison(0);
         System.out.println("Vous êtes maintenant en prison pour les 3 prochaines tours.");
-        joueur.setPosition(this.id); 
+        joueur.setPosition(this.getId());
     }
-
 
     public boolean gererTourEnPrison(JoueurMonopoly joueur,int toursEnPrison) {
         toursEnPrison++;
         System.out.print("Tour " + toursEnPrison);
         
         if (toursEnPrison == 3) {
-            this.estPrisonnier = false; 
-            this.ajouterArgent(AMENDE_PRISON); 
-
+            joueur.setEstPrison(false);
+            joueur.addToursEnPrison();
         }
 
         System.out.println("Option disponible :");
         System.out.println("1. Lancer un double");
         System.out.println("2. Payer 50 euros pour s'echapper");
         
-        int choix = Input.getIntegerInput("Choisissez une option : ");
+        int choix = 1;
         switch (choix) {
 
             case 1:
                 System.out.println("Vous lancez les dés ...");
-                int[] resultatDes = Des.lancer2des(); //methode pour lancer 2 des
+                int[] resultatDes = {6,6};//Des.lancer2des(); //Méthode pour lancer 2 des
                 int totalDes = resultatDes[0] + resultatDes[1];
                 System.out.println("Resultat du lancer : " + totalDes);
-                if (totalDes % 2 == 0) {
+                if (resultatDes[0] == resultatDes[1]) {
                     System.out.println("Vous avez fait un double ! Vous sortez de prison.");
-                    this.estPrisonnier = false;
-                    this.setId(this.getId() + totalDes);
+                    joueur.setEstPrison(false);
+                    joueur.deplacerDe(totalDes);
                 } else {
                     System.out.println("Vous n'avez pas fait de double !");
                 }
@@ -56,15 +48,15 @@ public class CasePrison extends Case {
 
             case 2:
                 System.out.println("Vous payez l'amende pour vous echapper de la prison.");
-                this.ajouterArgent(AMENDE_PRISON);
-                this.estPrisonnier = false;
+                joueur.retirerArgent(AMENDE_PRISON);
+                joueur.setEstPrison(false);
                 break;
 
             default:
                 System.out.println("Option invalide !");
 
         }
-        return this.estPrisonnier; //retourne true si le joueur est toujours en prison
+        return joueur.getEnPrison(); //retourne true si le joueur est toujours en prison
 
  
 }  

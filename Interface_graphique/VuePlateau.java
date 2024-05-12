@@ -3,6 +3,8 @@ package Interface_graphique;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import GestionMonopoly.JoueurMonopoly;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -25,11 +27,12 @@ public class VuePlateau extends JFrame {
 
     //Attributs
     private int[] cases_occupées = new int[41];
-    private ArrayList<?> joueurs;
+    private ArrayList<JoueurMonopoly> joueurs;
     private Pion[] pions;
     private JLabel plateau;
     private JButton bFinTour;
     private JButton bFinPartie;
+
     /** Facteur pour adapter la taille des éléments à la taille de la fenêtre */
     private double scaleFactor;
 
@@ -159,28 +162,5 @@ public class VuePlateau extends JFrame {
         System.out.println("Occupation : " + cases_occupées[nbCase]);
         System.out.println("Nb case : " + nbCase);
         cases_occupées[pions[nbPion].getPosition()]++;
-    }
-
-    public static void main(String[] args) {
-        // Création du tableau de JPanel pour les joueurs
-        String[] nomsJoueurs = {"Pépé","Mémé","Papa","Maman"};
-        Panneau_joueur[] joueurPanels = new Panneau_joueur[nomsJoueurs.length];
-        // Création et affichage des JPanel pour chaque joueur
-        String[] propriétés = {"Rue des filatiers","Hazebrouck"};
-        String[] gares = {"Gare Matabiau"};
-        for (int i = 0; i < nomsJoueurs.length; i++) {
-            joueurPanels[i] = new Panneau_joueur(nomsJoueurs[i],1000,propriétés,gares);
-        }
-
-        Pion pion1 = new Pion(0,0,Color.red);
-        Pion pion2 = new Pion(0,1,Color.green);
-        Pion pion3 = new Pion(0,2,Color.pink);
-        Pion pion4 = new Pion(0,3,Color.yellow);
-        Pion[] liste_pions = {pion1,pion2,pion3,pion4};
-        VuePlateau frame = new VuePlateau(liste_pions,joueurPanels);
-        // Dimension de la fenêtre
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        // Rendre la fenêtre visible
-        frame.setVisible(true);
     }
 }

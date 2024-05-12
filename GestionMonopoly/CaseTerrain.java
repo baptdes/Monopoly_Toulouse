@@ -1,4 +1,4 @@
-package Classes;
+package GestionMonopoly;
 
 import java.util.ArrayList;
 
@@ -7,16 +7,16 @@ public class CaseTerrain extends Case {
 	private JoueurMonopoly proprietaire;
 	private String couleur;
 	private int valeurachat;
-	private ArrayList<Integer> Loyer;
+	private int[] loyer;
 	private int prixmaison;
 	private int nbrmaison;
 	
 	
-	public CaseTerrain(String nom, int valeurachat, ArrayList<Integer> Loyer, String couleur, int prixMaison, int id){
+	public CaseTerrain(String nom, int valeurachat, int[] loyer, String couleur, int prixMaison, int id){
 		super(nom, id);
 		assert( valeurachat > 0 && couleur != null && prixMaison > 0 );
 		this.valeurachat = valeurachat;
-		this.Loyer = Loyer;
+		this.loyer = loyer;
 		this.couleur = couleur;
 		this.prixmaison = prixMaison;	
 		this.nbrmaison = 0;
@@ -42,16 +42,15 @@ public class CaseTerrain extends Case {
 		this.proprietaire = proprietaire;
 	}
 	
-	//public void actionCase(JoueurMonopoly joueur, PlateauMonopoly plateau, FenetrePrincipale fp) {
-	// Je garde cette méthode en commentaire en attendant de voir ce qu'elle peut faire..	
-	//}
 	public boolean peutacheterterrain() {
 		return (this.proprietaire == null);
 	}
+
 	public boolean peutMettreMaison() {
 		return (this.nbrmaison < 5); 
 		
 	}
+
 	public void ajouterMaison() {
 		if (peutMettreMaison()) {
 			this.nbrmaison++;
@@ -59,15 +58,17 @@ public class CaseTerrain extends Case {
 			System.out.println("Nombre maximum de maisons atteint.");
 		}
 	}
+
 	public void vendremaison() {
 		assert(this.nbrmaison > 0);
 		this.nbrmaison--;
 	}
-	 public ArrayList<Integer> getLoyer(){
-		 return this.Loyer;
-	 }
+
+	public int[] getLoyer(){
+		return this.loyer;
+	}
 	 
-	 public void action() {
+	public void action() {
 			
-		}
+	}
 }

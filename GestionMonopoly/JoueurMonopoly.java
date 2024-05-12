@@ -1,8 +1,10 @@
-package Classes;
+package GestionMonopoly;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import Interface_graphique.Panneau_joueur;
 
 public class JoueurMonopoly{
 	
@@ -17,6 +19,7 @@ public class JoueurMonopoly{
 		private ArrayList<CaseGare> gares;
 		private ArrayList<CaseService> service;
 		private Map<String, List<CaseTerrain>> terrainsparcouleur;
+		private Panneau_joueur affichage;
 
 		
 		public JoueurMonopoly(String nom, int id, int argent) {
@@ -32,6 +35,11 @@ public class JoueurMonopoly{
 			this.terrainsparcouleur = new HashMap<String, List<CaseTerrain>>();
 			this.estBanqueroute = false;
 			this.enPrison = false;
+			this.affichage = new Panneau_joueur(nom,argent);
+		}
+
+		public Panneau_joueur getPanel(){
+			return this.affichage;
 		}
 		
 		public String getNom() {
@@ -49,10 +57,10 @@ public class JoueurMonopoly{
 		public int getSolde() {
 			return this.argent;
 		}
-		public int gettoursprison() {
+		public int getToursPrison() {
 			return this.toursEnPrison;
 		}
-		public boolean getenprison() {
+		public boolean getEnPrison() {
 			return this.enPrison;
 		}
 		public void setNom(String nom) {
@@ -75,14 +83,24 @@ public class JoueurMonopoly{
 			assert(pos >= 0);
 			this.position = pos;
 		}
+
+		public void deplacerDe(int dep) {
+			assert(dep >= 0);
+			this.position = this.position + dep;
+		}
 		
 		public void setToursEnPrison(int toursEnPrison) {
 			assert(toursEnPrison >= 0);
 			this.toursEnPrison = toursEnPrison;
 		}
+
+		public void addToursEnPrison() {
+			assert(this.toursEnPrison < 3);
+			this.toursEnPrison = this.toursEnPrison + 1;
+		}
 		
 		public void setEstPrison(boolean prison) {
-			this.estPrison = prison;			
+			this.enPrison = prison;			
 		}
 		
 				
@@ -99,10 +117,12 @@ public class JoueurMonopoly{
 				if (terrainsparcouleur.containsKey(terrain.getcouleur())) {
 					List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
 					terrains.add(terrain);
+					affichage.addPropriété(terrain.getNom());
 					terrainsparcouleur.replace(terrain.getcouleur(),terrains);
 				} else {
 					List<CaseTerrain> terrains = new ArrayList<CaseTerrain>();
 					terrains.add(terrain);
+					affichage.addPropriété(terrain.getNom());
 					terrainsparcouleur.put(terrain.getcouleur(), terrains);
 				}				
 				this.argent -= terrain.getprixachat();				
@@ -165,6 +185,7 @@ public class JoueurMonopoly{
 			assert(gare != null && this.argent > gare.getprixachat());
 			if (gare.peutachetergare()) {
 				gares.add(gare);
+				affichage.addGare(gare.getNom());
 				this.argent -= gare.getprixachat();
 			}else {
 				System.out.println("Cette gare appartient à un autre joueur");
@@ -172,25 +193,15 @@ public class JoueurMonopoly{
 		}
 		public void payerloyergare(CaseGare gare) {
 			assert(this.position == gare.getId() &&  gare.getprop() != null && gare.getprop().getNom() != this.nom );
-			ArrayList<Integer> Loyer = gare.getLoyer();
+			int[] loyer = gare.getLoyer();
 			if (gares.size() == 1) {
-				this.argent -= Loyer.get(0);
+				this.argent -= loyer[0];
 			} else if ( gares.size() == 2) {
-				this.argent -= Loyer.get(1);
+				this.argent -= loyer[1];
 			} else if ( gares.size() == 3) {
-				this.argent -= Loyer.get(2);
+				this.argent -= loyer[2];
 			} else if ( gares.size() == 4) {
-				this.argent -= Loyer.get(3);
-			}
-		}
-		
-		public void ajouterservice(CaseService serv) {
-			assert(serv != null && this.argent > serv.getprixachat());
-			if (serv.peutacheterservice()) {
-				service.add(serv);
-				this.argent -= serv.getprixachat();
-			}else {
-				System.out.println("Cette compagnie de distribution appartient à un autre joueur");
+				this.argent -= loyer[3];
 			}
 		}
 		
@@ -206,21 +217,21 @@ public class JoueurMonopoly{
 		
 		public void payerloyer(CaseTerrain terrain) {
 			assert(this.position == terrain.getId() &&  terrain.getprop() != null && terrain.getprop().getNom() != this.nom );
-			ArrayList<Integer> Loyer = terrain.getLoyer();
+			int[] loyer = terrain.getLoyer();
 			if (terrain.getnbrmaison() == 0 && !Groupecomplet(terrain)) { //loyer de la prop seule
-				this.argent -= Loyer.get(0);
+				this.argent -= loyer[0];
 			}else if (terrain.getnbrmaison() == 0 && Groupecomplet(terrain)) { //loyer pour le groupe complet
-				this.argent -= Loyer.get(1);
+				this.argent -= loyer[1];
 			}else if (terrain.getnbrmaison() == 1) { //loyer pour 1 maison
-				this.argent -= Loyer.get(2);
+				this.argent -= loyer[2];
 			}else if (terrain.getnbrmaison() == 2) {//loyer pour 2 maison
-				this.argent -= Loyer.get(3);
+				this.argent -= loyer[3];
 			}else if (terrain.getnbrmaison() == 3) {//loyer pour 3 maison
-				this.argent -= Loyer.get(4);
+				this.argent -= loyer[4];
 			}else if (terrain.getnbrmaison() == 4) {//loyer pour 4 maison
-				this.argent -= Loyer.get(5);
+				this.argent -= loyer[5];
 			}else if (terrain.getnbrmaison() == 5) { // 5 maisons == 1 hôtel 
-				this.argent -= Loyer.get(6);
+				this.argent -= loyer[6];
 			}		
 		}
 		
@@ -230,10 +241,20 @@ public class JoueurMonopoly{
 		    this.argent += gare.getprixachat(); // vendre à la banque avec le même prix d'achat
 		}
 		
-		public void vendreservice(CaseService service) {
+		/** public void vendreservice(CaseService service) {
 		    assert(service != null && service.contains(service)); 
 		    service.remove(service); 
 		    this.argent += service.getprixachat(); // vendre à la banque avec le même prix d'achat
 		}
+		
+		public void ajouterservice(CaseService serv) {
+			assert(serv != null && this.argent > serv.getprixachat());
+			if (serv.peutacheterservice()) {
+				service.add(serv);
+				this.argent -= serv.getprixachat();
+			}else {
+				System.out.println("Cette compagnie de distribution appartient à un autre joueur");
+		}
+		}*/
 		
 }
