@@ -1,5 +1,8 @@
 package Classes;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JoueurMonopoly{
 	
@@ -8,27 +11,27 @@ public class JoueurMonopoly{
 		private int position;
 		private int argent;
 		private int toursEnPrison;
-		private int nombreGaresPossedees;
-		private int nombreServicesPossedees;
 		private boolean estBanqueroute;
-		private boolean estPrison;
-		private boolean possedeCarteSortiePrison;
-		private ArrayList<CaseTerrain> terrains; 
-		private ArrayList<String> couleurs;
-		private int nbrmarron; // nbr de propriété de la même couleur
-		private int nbrturquoise;
-		private int nbrviolet;
-		private int nbrorange;
-		private int nbrrouge;
-		private int nbrjaune;
-		private int nbrvert;
-		private int nbrbleu;
+		private boolean enPrison;
+		private int CarteSortiePrison;
+		private ArrayList<CaseGare> gares;
+		private ArrayList<CaseService> service;
+		private Map<String, List<CaseTerrain>> terrainsparcouleur;
+
 		
 		public JoueurMonopoly(String nom, int id, int argent) {
 			assert(nom != null && id > 0 && argent > 0);
 			this.nom = nom;
 			this.id = id;
 			this.argent = argent;
+			this.position = 0;
+			this.toursEnPrison = 0;
+			this.CarteSortiePrison = 0;
+			this.gares = new ArrayList<CaseGare>();
+			this.service = new ArrayList<CaseService>();
+			this.terrainsparcouleur = new HashMap<String, List<CaseTerrain>>();
+			this.estBanqueroute = false;
+			this.enPrison = false;
 		}
 		
 		public String getNom() {
@@ -46,7 +49,12 @@ public class JoueurMonopoly{
 		public int getSolde() {
 			return this.argent;
 		}
-		
+		public int gettoursprison() {
+			return this.toursEnPrison;
+		}
+		public boolean getenprison() {
+			return this.enPrison;
+		}
 		public void setNom(String nom) {
 			assert(nom != null);
 			this.nom = nom;
@@ -77,107 +85,75 @@ public class JoueurMonopoly{
 			this.estPrison = prison;			
 		}
 		
-		public void setCarteSortiePrison(boolean b) {
-			this.possedeCarteSortiePrison = b;
-		}
-		
-		public void setEstBanqueroute(boolean banqueroute) {
-			this.estBanqueroute = banqueroute;
-		}
-		
-		public void setNbGares(int nb) {
-			assert( nb >= 0);
-			this.nombreGaresPossedees = nb;
-		}
-		
-		public void setNbServices(int nb) {
-			assert( nb >= 0);
-			this.nombreServicesPossedees = nb;
-		}
-		public void actualisercouleurachat(String couleur) {
-			if ("Marron".equals(couleur)) {
-				this.nbrmarron += 1;
-			} else if ("Turquoise".equals(couleur)) {
-				this.nbrturquoise += 1;
-			}else if ("Violet".equals(couleur)) {
-				this.nbrviolet += 1;
-			}else if ("Orange".equals(couleur)) {
-				this.nbrorange += 1;
-			}else if ("Rouge".equals(couleur)) {
-				this.nbrrouge += 1;
-			}else if ("Jaune".equals(couleur)) {
-				this.nbrjaune += 1;
-			}else if ("Vert".equals(couleur)) {
-				this.nbrvert += 1;
-			}else if ("Bleu".equals(couleur)) {
-				this.nbrbleu += 1;
+				
+		public void setEstBanqueroute() {
+			if (this.argent == 0) {
+			this.estBanqueroute = true;
 			}
 		}
 		
-		public void actualisercouleurvente(String couleur) {
-			if ("Marron".equals(couleur)) {
-				this.nbrmarron -= 1;
-			} else if ("Turquoise".equals(couleur)) {
-				this.nbrturquoise -= 1;
-			}else if ("Violet".equals(couleur)) {
-				this.nbrviolet -= 1;
-			}else if ("Orange".equals(couleur)) {
-				this.nbrorange -= 1;
-			}else if ("Rouge".equals(couleur)) {
-				this.nbrrouge -= 1;
-			}else if ("Jaune".equals(couleur)) {
-				this.nbrjaune -= 1;
-			}else if ("Vert".equals(couleur)) {
-				this.nbrvert -= 1;
-			}else if ("Bleu".equals(couleur)) {
-				this.nbrbleu -= 1;
-			}
-		}
+		
 		public void ajouterTerrain(CaseTerrain terrain) {
 			assert(terrain != null && this.argent > terrain.getprixachat());
 			if (terrain.peutacheterterrain()) {
-				terrains.add(terrain);
-				actualisercouleurachat(terrain.getcouleur());
-				this.argent -= terrain.getprixachat();
+				if (terrainsparcouleur.containsKey(terrain.getcouleur())) {
+					List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
+					terrains.add(terrain);
+					terrainsparcouleur.replace(terrain.getcouleur(),terrains);
+				} else {
+					List<CaseTerrain> terrains = new ArrayList<CaseTerrain>();
+					terrains.add(terrain);
+					terrainsparcouleur.put(terrain.getcouleur(), terrains);
+				}				
+				this.argent -= terrain.getprixachat();				
 			}else {
 				System.out.println("Ce terrain appartient à un autre joueur");
 			}
 		}
-		public boolean Verifpropcomplete(String couleur) {
-			if ("Marron".equals(couleur)) {
-				return this.nbrmarron == 2;
-			} else if ("Turquoise".equals(couleur)) {
-				return this.nbrturquoise == 3;
-			}else if ("Violet".equals(couleur)) {
-				return this.nbrviolet == 3;
-			}else if ("Orange".equals(couleur)) {
-				return this.nbrorange == 3;
-			}else if ("Rouge".equals(couleur)) {
-				return this.nbrrouge == 3;
-			}else if ("Jaune".equals(couleur)) {
-				return this.nbrjaune == 3;
-			}else if ("Vert".equals(couleur)) {
-				return this.nbrvert == 3;
-			}else if ("Bleu".equals(couleur)) {
-				return this.nbrbleu == 2;
+		public boolean Groupecomplet(CaseTerrain terrain) {
+			boolean Groupecomplet = false;
+			List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
+			int nbrprop = terrains.size(); //nbr de propriété pour la couleur, pour les marrons et bleu roi
+			// il faut que ce nbr = 2 et pour les autres couleurs = 3 pour completer le groupe
+			if ( terrain.getcouleur() == "Marron" || terrain.getcouleur() == "Bleu Roi") {
+				if (nbrprop == 2) {
+					Groupecomplet = true;
+				}
+			} else {
+				if (nbrprop == 3) { 
+					Groupecomplet = true;
+				}
 			}
-			return false;
+			return Groupecomplet;
 		}
+		
 		public void ajouterMaisonTerrain(CaseTerrain terrain) {
-			if (Verifpropcomplete(terrain.getcouleur())) {
+					
+			if (Groupecomplet(terrain) == true) {
 				terrain.ajouterMaison();
 				this.argent -= terrain.getprixmaison();
 			} else {
 				System.out.println("Veuillez completez le groupe de la propriété avant de construire une maison");
-			}
-			
+			}			
 		}
 		
 		public void vendreTerrain(CaseTerrain terrain) {
-		    assert(terrain != null && terrains.contains(terrain) && terrain.getnbrmaison() == 0); 
-		    terrains.remove(terrain); 
-		    actualisercouleurvente(terrain.getcouleur());
-		    this.argent += terrain.getprixachat(); // vendre à la banque avec le même prix d'achat
+		    assert(terrain != null && terrain.getnbrmaison() == 0); 
+		    // Tout d'abord on vérifie que ce terrain nous appartient
+		    boolean Nousappartient = false;
+		    for (List<CaseTerrain> liste : terrainsparcouleur.values()) {
+	            if (liste.contains(terrain)) {
+	                Nousappartient = true;
+	            }
+		    }
+		    if (Nousappartient = true) {
+		    	List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
+		    	terrains.remove(terrain);  // on supprime ce terrain de la liste associé à sa couleur
+		    	terrainsparcouleur.replace(terrain.getcouleur(),terrains);
+		    	this.argent += terrain.getprixachat(); // vendre à la banque avec le même prix d'achat
+		    } else {
+		    	System.out.println("Ce terrain ne vous appartient pas");
+		    }
 		}
 		
 		public void VendreMaisonTerrain(CaseTerrain terrain) {
@@ -185,20 +161,37 @@ public class JoueurMonopoly{
 			this.argent += terrain.getprixmaison()/2; //Vendre une maison à 50% du prix d'achat.
 		}
 		
-		public ArrayList<String> getListeStringTerrains() {
-			ArrayList<String> nomsTerrains = new ArrayList<>();
-			for (CaseTerrain unTerrain : terrains) {
-				nomsTerrains.add(unTerrain.getNom()); 													  
+		public void ajouterGare(CaseGare gare) {
+			assert(gare != null && this.argent > gare.getprixachat());
+			if (gare.peutachetergare()) {
+				gares.add(gare);
+				this.argent -= gare.getprixachat();
+			}else {
+				System.out.println("Cette gare appartient à un autre joueur");
 			}
-			return nomsTerrains;
+		}
+		public void payerloyergare(CaseGare gare) {
+			assert(this.position == gare.getId() &&  gare.getprop() != null && gare.getprop().getNom() != this.nom );
+			ArrayList<Integer> Loyer = gare.getLoyer();
+			if (gares.size() == 1) {
+				this.argent -= Loyer.get(0);
+			} else if ( gares.size() == 2) {
+				this.argent -= Loyer.get(1);
+			} else if ( gares.size() == 3) {
+				this.argent -= Loyer.get(2);
+			} else if ( gares.size() == 4) {
+				this.argent -= Loyer.get(3);
+			}
 		}
 		
-		public ArrayList<CaseTerrain> getTerrains() {
-			return this.terrains;
-		}
-		
-		public ArrayList<String> getListeCouleur() {
-			return this.couleurs;
+		public void ajouterservice(CaseService serv) {
+			assert(serv != null && this.argent > serv.getprixachat());
+			if (serv.peutacheterservice()) {
+				service.add(serv);
+				this.argent -= serv.getprixachat();
+			}else {
+				System.out.println("Cette compagnie de distribution appartient à un autre joueur");
+			}
 		}
 		
 		public void ajouterArgent(int montant) {
@@ -212,23 +205,35 @@ public class JoueurMonopoly{
 		}
 		
 		public void payerloyer(CaseTerrain terrain) {
-			assert(this.position == terrain.getId() && ( terrain.getprop() != null && terrains.contains(terrain)));
+			assert(this.position == terrain.getId() &&  terrain.getprop() != null && terrain.getprop().getNom() != this.nom );
 			ArrayList<Integer> Loyer = terrain.getLoyer();
-			if (terrain.getnbrmaison() == 0 && !terrain.getprop().Verifpropcomplete(terrain.getcouleur())) {
+			if (terrain.getnbrmaison() == 0 && !Groupecomplet(terrain)) { //loyer de la prop seule
 				this.argent -= Loyer.get(0);
-			}else if (terrain.getnbrmaison() == 0 && !terrain.getprop().Verifpropcomplete(terrain.getcouleur())) {
+			}else if (terrain.getnbrmaison() == 0 && Groupecomplet(terrain)) { //loyer pour le groupe complet
 				this.argent -= Loyer.get(1);
-			}else if (terrain.getnbrmaison() == 1) {
+			}else if (terrain.getnbrmaison() == 1) { //loyer pour 1 maison
 				this.argent -= Loyer.get(2);
-			}else if (terrain.getnbrmaison() == 2) {
+			}else if (terrain.getnbrmaison() == 2) {//loyer pour 2 maison
 				this.argent -= Loyer.get(3);
-			}else if (terrain.getnbrmaison() == 3) {
+			}else if (terrain.getnbrmaison() == 3) {//loyer pour 3 maison
 				this.argent -= Loyer.get(4);
-			}else if (terrain.getnbrmaison() == 4) {
+			}else if (terrain.getnbrmaison() == 4) {//loyer pour 4 maison
 				this.argent -= Loyer.get(5);
 			}else if (terrain.getnbrmaison() == 5) { // 5 maisons == 1 hôtel 
 				this.argent -= Loyer.get(6);
 			}		
+		}
+		
+		public void vendreGare(CaseGare gare) {
+		    assert(gare != null && gares.contains(gare)); 
+		    gares.remove(gare); 
+		    this.argent += gare.getprixachat(); // vendre à la banque avec le même prix d'achat
+		}
+		
+		public void vendreservice(CaseService service) {
+		    assert(service != null && service.contains(service)); 
+		    service.remove(service); 
+		    this.argent += service.getprixachat(); // vendre à la banque avec le même prix d'achat
 		}
 		
 }

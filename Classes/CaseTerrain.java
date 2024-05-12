@@ -2,12 +2,10 @@ package Classes;
 
 import java.util.ArrayList;
 
-public class CaseTerrain implements Case {
+public class CaseTerrain extends Case {
 	
 	private JoueurMonopoly proprietaire;
-	private String nom;
 	private String couleur;
-	private int id;
 	private int valeurachat;
 	private ArrayList<Integer> Loyer;
 	private int prixmaison;
@@ -15,23 +13,15 @@ public class CaseTerrain implements Case {
 	
 	
 	public CaseTerrain(String nom, int valeurachat, ArrayList<Integer> Loyer, String couleur, int prixMaison, int id){
-		assert(nom != null && valeurachat > 0 && couleur != null && prixMaison > 0 && id > 0);
-		this.nom = nom;
+		super(nom, id);
+		assert( valeurachat > 0 && couleur != null && prixMaison > 0 );
 		this.valeurachat = valeurachat;
 		this.Loyer = Loyer;
 		this.couleur = couleur;
-		this.prixmaison = prixMaison;
-		this.id = id;
+		this.prixmaison = prixMaison;	
 		this.nbrmaison = 0;
 	}
-	@Override
-	public String getNom() {
-		return this.nom;
-	}
-	@Override
-	public int getId() {
-		return this.id;
-	}
+
 	public int getprixmaison() {
 		return this.prixmaison;
 	}
@@ -76,4 +66,8 @@ public class CaseTerrain implements Case {
 	 public ArrayList<Integer> getLoyer(){
 		 return this.Loyer;
 	 }
+	 
+	 public void action() {
+			
+		}
 }
