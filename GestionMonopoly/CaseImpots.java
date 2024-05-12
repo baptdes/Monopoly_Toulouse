@@ -1,4 +1,4 @@
-package Classes;
+package GestionMonopoly;
 
 public class CaseImpots extends Case {
 	

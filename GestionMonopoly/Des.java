@@ -1,4 +1,4 @@
-package Classes;
+package GestionMonopoly;
 import java.util.Random;
 
 public class Des {
