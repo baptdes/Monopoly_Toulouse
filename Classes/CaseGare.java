@@ -6,13 +6,13 @@ public class CaseGare extends Case {
 	
 	private JoueurMonopoly proprietaire;
 	private int valeurachat;
-	private ArrayList<Integer> Loyer;
+	private int[] loyer;
 	
-	public CaseGare(String nom, int valeurachat, ArrayList<Integer> Loyer, int id){
+	public CaseGare(String nom, int valeurachat, int[] loyer, int id){
 		super(nom, id);
 		assert(valeurachat > 0  && id > 0);
 		this.valeurachat = valeurachat;
-		this.Loyer = Loyer;
+		this.loyer = loyer;
 	}
 	
 
@@ -31,8 +31,8 @@ public class CaseGare extends Case {
 		return (this.proprietaire == null);
 	}
 	
-	 public ArrayList<Integer> getLoyer(){
-		 return this.Loyer;
+	 public int[] getLoyer(){
+		 return this.loyer;
 	 }
 	 
 	 public void action() {
