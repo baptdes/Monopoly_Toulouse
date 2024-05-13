@@ -56,7 +56,7 @@ public class CasePrison extends Case {
                 System.out.println("Option invalide !");
 
         }
-        return joueur.getEnPrison(); //retourne true si le joueur est toujours en prison
+        return joueur.estEnPrison(); //retourne true si le joueur est toujours en prison
 
  
 }  
