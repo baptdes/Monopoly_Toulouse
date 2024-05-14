@@ -34,6 +34,7 @@ public class Propriete extends Case {
         this.valeurAchat = valeurAchat;
         this.loyer = loyer;
         this.groupe = groupe;
+        groupe.addPropriete(this);
         this.prixMaison = prixMaison;
     }
 
