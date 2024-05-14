@@ -3,10 +3,10 @@ package Interface_graphique;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-import GestionMonopoly.CaseGare;
-import GestionMonopoly.CaseTerrain;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import GestionMonopoly.Cases.Gare;
+import GestionMonopoly.Cases.Propriete;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -73,7 +73,7 @@ public class VuePlateau extends JFrame {
         bFinTour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().addPropriete((CaseTerrain) plateau.getCase(3));
+                plateau.getJoueurActif().acheterPropriete((Propriete) plateau.getCase(3));
 
             }
         });
@@ -85,7 +85,7 @@ public class VuePlateau extends JFrame {
         bFinPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().addGare((CaseGare) plateau.getCase(5));
+                plateau.getJoueurActif().acheterGare((Gare) plateau.getCase(5));
             }
         });
 

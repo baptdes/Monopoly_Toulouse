@@ -1,4 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cases;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 public class CasePrison extends Case {
 
@@ -57,8 +60,10 @@ public class CasePrison extends Case {
 
         }
         return joueur.estEnPrison(); //retourne true si le joueur est toujours en prison
+    }
 
+    public void action(JoueurMonopoly joueur, Plateau plateau){
+
+    }
  
-}  
-
 } 

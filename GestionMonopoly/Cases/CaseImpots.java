@@ -1,10 +1,12 @@
-package GestionMonopoly;
+package GestionMonopoly.Cases;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 public class CaseImpots extends Case {
 	
     private int montantImpot;
     
-
     /**
      * Constructeur pour initialiser le nom et le montant de l'impôt pour la case.
      * @param nom String  le nom de la case
@@ -21,14 +23,8 @@ public class CaseImpots extends Case {
      * retirant de l'argent du joueur et l'ajoutant au parc gratuit.
      * @param joueur JoueurMonopoly  le joueur qui doit payer l'impôt
      */
-    
-    public void action(JoueurMonopoly joueur) {
+    public void action(JoueurMonopoly joueur, Plateau plateau) {
         System.out.println(joueur.getNom() + " paie " + this.montantImpot + "€ d'impôts.");
-
         joueur.debiter(this.montantImpot);
-
     }
 }
-//PS : j'ai (Atif) effacé les deux lignes sur le parcgratuit car je ne voyais l'utilité, on peut initialiser
-//le parc gratuit par une caseimpots dont le montantImpots = 0, ça évite de créer une classe de plus :), de même pour la
-// visite simple du prison

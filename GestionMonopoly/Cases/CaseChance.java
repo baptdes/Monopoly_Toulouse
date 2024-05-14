@@ -1,5 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cases;
 
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 public class CaseChance extends Case {
 
@@ -9,7 +11,7 @@ public class CaseChance extends Case {
     }
 
     
-    public void action(JoueurMonopoly joueur) {
+    public void action(JoueurMonopoly joueur, Plateau plateau) {
         // Supposons que nous avons une méthode pour tirer une carte de chance
         // Carte carte = tirerCarteChance();
 

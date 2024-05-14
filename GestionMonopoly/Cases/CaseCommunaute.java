@@ -1,5 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cases;
 
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 public class CaseCommunaute extends Case {
 
@@ -8,7 +10,7 @@ public class CaseCommunaute extends Case {
         super(nom, id);
     }
   
-    public void action(JoueurMonopoly joueur) {
+    public void action(JoueurMonopoly joueur, Plateau plateau) {
         //Supposons que nous avons une méthode pour tirer une carte
         //Carte carte = tirerCarteCommunaute();
         System.out.println(joueur.getNom() + " tire la carte " + "Test communauté");
