@@ -25,7 +25,7 @@ public class CaseImpots extends Case {
     public void action(JoueurMonopoly joueur) {
         System.out.println(joueur.getNom() + " paie " + this.montantImpot + "€ d'impôts.");
 
-        joueur.retirerArgent(this.montantImpot);
+        joueur.debiter(this.montantImpot);
 
     }
 }

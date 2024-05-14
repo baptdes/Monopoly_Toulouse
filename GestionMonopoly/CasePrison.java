@@ -10,8 +10,8 @@ public class CasePrison extends Case {
     }  
     
     public void entrerEnPrison(JoueurMonopoly joueur) {
-        joueur.setEstPrison(true);
-        joueur.setToursEnPrison(0);
+        joueur.setEstEnPrison(true);
+        joueur.resetToursEnPrison();
         System.out.println("Vous êtes maintenant en prison pour les 3 prochaines tours.");
         joueur.setPosition(this.getId());
     }
@@ -21,7 +21,7 @@ public class CasePrison extends Case {
         System.out.print("Tour " + toursEnPrison);
         
         if (toursEnPrison == 3) {
-            joueur.setEstPrison(false);
+            joueur.setEstEnPrison(false);
             joueur.addToursEnPrison();
         }
 
@@ -39,8 +39,8 @@ public class CasePrison extends Case {
                 System.out.println("Resultat du lancer : " + totalDes);
                 if (resultatDes[0] == resultatDes[1]) {
                     System.out.println("Vous avez fait un double ! Vous sortez de prison.");
-                    joueur.setEstPrison(false);
-                    joueur.deplacerDe(totalDes);
+                    joueur.setEstEnPrison(false);
+                    //joueur.deplacerDe(totalDes);
                 } else {
                     System.out.println("Vous n'avez pas fait de double !");
                 }
@@ -48,8 +48,8 @@ public class CasePrison extends Case {
 
             case 2:
                 System.out.println("Vous payez l'amende pour vous echapper de la prison.");
-                joueur.retirerArgent(AMENDE_PRISON);
-                joueur.setEstPrison(false);
+                joueur.debiter(AMENDE_PRISON);
+                joueur.setEstEnPrison(false);
                 break;
 
             default:

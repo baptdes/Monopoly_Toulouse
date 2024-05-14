@@ -1,10 +1,12 @@
 package GestionMonopoly;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import Interface_graphique.Panneau_joueur;
+import Interface_graphique.Pion;
 
 public class JoueurMonopoly{
 
@@ -18,10 +20,11 @@ public class JoueurMonopoly{
 	private ArrayList<CaseGare> gares;
 	private ArrayList<CaseService> service;
 	private Map<String, List<CaseTerrain>> proprietes;
-	private Panneau_joueur affichage;
+	private Panneau_joueur panneau;
+	private Pion pion;
 
 	
-	public JoueurMonopoly(String nom, int id, int argent) {
+	public JoueurMonopoly(String nom, int id, int argent, Color couleur) {
 		assert(nom != null && id > 0 && argent > 0);
 		this.nom = nom;
 		this.id = id;
@@ -33,7 +36,8 @@ public class JoueurMonopoly{
 		this.service = new ArrayList<CaseService>();
 		this.proprietes = new HashMap<String, List<CaseTerrain>>();
 		this.enPrison = false;
-		this.affichage = new Panneau_joueur(nom,argent);
+		this.panneau = new Panneau_joueur(this,argent);
+		this.pion = new Pion(this,couleur);
 	}
 
 	// |||||||||||||||||||| Requêtes ||||||||||||||||||||||
@@ -62,8 +66,16 @@ public class JoueurMonopoly{
 		return this.enPrison;
 	}
 
+	public boolean estBanqueroute(){
+		return this.argent <= 0;
+	}
+
 	public Panneau_joueur getPanel(){
-		return this.affichage;
+		return this.panneau;
+	}
+
+	public Pion getPion(){
+		return this.pion;
 	}
 
 	public boolean possedeGroupe(CaseTerrain propriete) {
@@ -98,11 +110,13 @@ public class JoueurMonopoly{
 	public void crediter(int montant) {
 		assert(montant >= 0);
 		this.argent += montant;
+		panneau.updateArgent(this.argent);
 	}
 	
 	public void debiter(int montant) {
 		assert(montant >= 0);
 		this.argent -= montant;
+		panneau.updateArgent(this.argent);
 	}
 	
 	public void setPosition(int pos) {
@@ -111,8 +125,14 @@ public class JoueurMonopoly{
 	}
 
 	public void deplacer(int x) {
-		assert(x >= 0);
-		this.position = this.position + x;
+		if (x >= 0) {
+			this.position = (this.position + x) % (Plateau.nbCases - 1);
+		} else {
+			// Si le déplacement est négatif (vers l'arrière), on ajoute 40 pour assurer un déplacement correct.
+			// Par exemple, si la position est 3 et x est -5, on veut que la nouvelle position soit 38.
+			// En ajoutant 40, on obtient 35 % 40 = 35, qui est correct.
+			this.position = (this.position + x + Plateau.nbCases - 1) % (Plateau.nbCases - 1);
+		}
 	}
 
 
@@ -143,12 +163,12 @@ public class JoueurMonopoly{
 			if (proprietes.containsKey(propriete.getcouleur())) {
 				List<CaseTerrain> terrains = proprietes.get(propriete.getcouleur());
 				terrains.add(propriete);
-				affichage.addPropriété(propriete.getNom());
+				panneau.addPropriété(propriete.getNom());
 				proprietes.replace(propriete.getcouleur(),terrains);
 			} else {
 				List<CaseTerrain> terrains = new ArrayList<CaseTerrain>();
 				terrains.add(propriete);
-				affichage.addPropriété(propriete.getNom());
+				panneau.addPropriété(propriete.getNom());
 				proprietes.put(propriete.getcouleur(), terrains);
 			}				
 			this.argent -= propriete.getprixachat();				
@@ -167,7 +187,7 @@ public class JoueurMonopoly{
 	}
 	
 	public void vendrePropriete(CaseTerrain propriete) {
-		assert(propriete != null && propriete.getnbrmaison() == 0); 
+		assert(propriete != null && propriete.getnbrmaison() == 0);		
 		// Tout d'abord on vérifie que ce propriete nous appartient
 		boolean Nousappartient = false;
 		for (List<CaseTerrain> liste : proprietes.values()) {
@@ -194,7 +214,7 @@ public class JoueurMonopoly{
 		assert(gare != null && this.argent > gare.getprixachat());
 		if (gare.peutachetergare()) {
 			gares.add(gare);
-			affichage.addGare(gare.getNom());
+			panneau.addGare(gare.getNom());
 			this.argent -= gare.getprixachat();
 		}else {
 			System.out.println("Cette gare appartient à un autre joueur");
@@ -202,7 +222,8 @@ public class JoueurMonopoly{
 	}
 	
 	public void vendreGare(CaseGare gare) {
-		assert(gare != null && gares.contains(gare)); 
+		assert(gare != null && gares.contains(gare));
+		panneau.removeGare(gare.getNom());
 		gares.remove(gare); 
 		this.argent += gare.getprixachat(); // vendre à la banque avec le même prix d'achat
 	}

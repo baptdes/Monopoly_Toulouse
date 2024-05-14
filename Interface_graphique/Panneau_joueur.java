@@ -4,6 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import GestionMonopoly.JoueurMonopoly;
+
 
 /** Classe qui sert à créer un panneau qui présente les informations d'un joueur */
 public class Panneau_joueur extends RoundedPanel {
@@ -12,18 +14,19 @@ public class Panneau_joueur extends RoundedPanel {
     private ListeLabel proprietesPanel;
     private ListeLabel compagniesPanel;
     private ListeLabel garesPanel;
+    private JoueurMonopoly joueur;
     
     /** Méthode pour créer le JPanel d'un joueur avec son nom, son argent et ses propriétés 
      * @param nomJoueur Nom du joueur
     */
-    public Panneau_joueur(String nomJoueur,int argent, String[] propriétés, String[] gares) {
+    public Panneau_joueur(JoueurMonopoly joueur,int argent, String[] propriétés, String[] gares) {
         // Créer un RoundedPanel pour le joueur
         super(15,Color.decode("#fae5d3"));
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(new EmptyBorder(6,1,6,1));
     
         // Nom du joueur
-        JLabel nomJoueurLabel = new JLabel(nomJoueur);
+        JLabel nomJoueurLabel = new JLabel(joueur.getNom());
         nomJoueurLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         nomJoueurLabel.setOpaque(false);
         nomJoueurLabel.setFont(VuePlateau.nomJoueurFont);
@@ -47,8 +50,8 @@ public class Panneau_joueur extends RoundedPanel {
         this.add(garesPanel);
     }
 
-    public Panneau_joueur(String nomJoueur, int argent){
-        this(nomJoueur, argent, new String[0], new String[0]);
+    public Panneau_joueur(JoueurMonopoly joueur, int argent){
+        this(joueur, argent, new String[0], new String[0]);
     }
     
     /**

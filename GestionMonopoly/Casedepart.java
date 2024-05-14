@@ -7,7 +7,7 @@ public class Casedepart extends Case {
     }
 	
 	public void action(JoueurMonopoly joueur) {
-		joueur.ajouterArgent(200);		
+		joueur.crediter(200);		
 	}
 
 }

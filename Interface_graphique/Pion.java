@@ -3,30 +3,50 @@ package Interface_graphique;
 import java.awt.*;
 import javax.swing.*;
 
+import GestionMonopoly.JoueurMonopoly;
+
+/**
+ * La classe Pion représente un pion de jeu dans l'interface graphique du Monopoly.
+ * Chaque pion est associé à un joueur et possède une couleur déterminée.
+ */
 public class Pion extends CerclePanel {
 
-    // Données sur l'image du pion
-    final ImageIcon pngPion = new ImageIcon("Pion_Monopoly_1.png");
     final int lengthPionAbsolute = 40;
 
+    private JoueurMonopoly joueur;
     private Color couleur;
-    private int position;
     private int diameter = lengthPionAbsolute;
     private double scaleFactor;
 
-    public Pion(int position, int nbPionsCase, Color couleur){
+    /**
+     * Constructeur de la classe Pion.
+     * @param joueur Le joueur associé au pion.
+     * @param couleur La couleur du pion.
+     */
+    public Pion(JoueurMonopoly joueur, Color couleur){
         super();
-        this.position = position;
+        this.joueur = joueur;
         this.couleur = couleur;
 
         // Mise en forme du pion
         this.setSize(diameter, diameter);
         this.setBackground(couleur);
 
-        // Donner la bonne position au pion
-        setPositionPion(position, nbPionsCase);
+        // Position initiale du pion
+        updatePosition(0);
     }
 
+    public int getPosition(){
+        return joueur.getPosition();
+    }
+
+    /**
+     * Calcule la position absolue du pion sur le plateau pour une résolution de 850x850.
+     * @param nbCase Le numéro de la case sur laquelle se trouve le pion.
+     * @param nbPionsCase Le nombre de pions déjà présents sur la case.
+     * @return Un tableau contenant les coordonnées absolues du pion.
+     * @throws CaseInvalideException Si le numéro de la case est invalide.
+     */
     static private int[] getPositionPionAbsolute850(int nbCase, int nbPionsCase){
         int x = 0; int y = 0;
         if (nbCase == 0) { //Case de départ
@@ -70,21 +90,25 @@ public class Pion extends CerclePanel {
         return res;
     }
 
-    public void setPositionPion(int nbCase, int nbPionsCase){
-        int[] pos850 = getPositionPionAbsolute850(nbCase, nbPionsCase);
+    /**
+     * Met à jour la position du pion sur le plateau en fonction du nombre de pions sur la case.
+     * @param nbPionsCase Le nombre de pions déjà présents sur la case.
+     */
+    public void updatePosition(int nbPionsCase){
+        int[] pos850 = getPositionPionAbsolute850(this.joueur.getPosition(), nbPionsCase);
         int x = (int) (pos850[0] * scaleFactor);
         int y = (int) (pos850[1] * scaleFactor);
-        this.position = nbCase;
         this.setBounds(x, y, diameter, diameter);
     }
 
+    /**
+     * Met à jour la position du pion de la taille de la fenêtre.
+     * @param scaleFactor Le facteur d'échelle pour ajuster la taille du plateau.
+     * @param nbPionsCase Le nombre de pions déjà présents sur la case.
+     */
     public void updatePlateauWidth(double scaleFactor, int nbPionsCase){
         this.scaleFactor = scaleFactor;
         this.diameter = (int) (lengthPionAbsolute * scaleFactor);
-        setPositionPion(position, nbPionsCase);
-    }
-
-    public int getPosition(){
-        return position;
+        updatePosition(nbPionsCase);
     }
 }
