@@ -21,8 +21,8 @@ public class Plateau {
     private final int nbCartesChance = 10;
     private final int nbCarteCommunaute = 10;
     public static final int NB_CASES = 41;
-    public static final int ID_CASE_PRISON = 41;
-    public static final int ID_CASE_VISITE_SIMPLE = 41;
+    public static final int ID_CASE_PRISON = 40;
+    public static final int ID_CASE_VISITE_SIMPLE = 10;
 
     private PaireDes des;
     private ArrayList<JoueurMonopoly> joueurs;
@@ -34,6 +34,14 @@ public class Plateau {
 
     // --------- Groupes de propriétés -------------
     private GroupeProprietes marron = new GroupeProprietes(new Color(125, 93, 57));
+    private GroupeProprietes Cyan = new GroupeProprietes(Color.cyan);
+    private GroupeProprietes Pink = new GroupeProprietes(Color.pink);
+    private GroupeProprietes Orange = new GroupeProprietes(Color.orange);
+    private GroupeProprietes Rouge = new GroupeProprietes(Color.red);
+    private GroupeProprietes Jaune = new GroupeProprietes(Color.yellow);
+    private GroupeProprietes Vert = new GroupeProprietes(Color.green);
+    private GroupeProprietes Bleu = new GroupeProprietes(new Color(29, 33, 128));
+    
     //TODO : A continuer pour definir les proprietes par la suite
     // Astuce :  pour avoir les valeurs RGB d'une couleur aller sur ce site :
     // https://htmlcolorcodes.com/fr/
@@ -61,47 +69,47 @@ public class Plateau {
         //TODO : A refaire avec les nouveaux paramètres suites au clean
         // Attention : Pour numéroter les cases : la case 0 est la case de depart ensuite on compte dans le sens du plateau
         //             Cas particulier : case 10 = visite simple et case 40 = case prison
-        cases[0] = new Casedepart("START", 0);
-        cases[1] = new Propriete("Rue Bayard", 60 , new int[]{2,4,10,30,90,160,250}, "Marron", 50, 1);
+        cases[0] = new CaseDepart("START", 0, 200);             
+        cases[1] = new Propriete("Rue Bayard",1,marron , 60 , new int[]{2,4,10,30,90,160,250},50);
         cases[2] = new CaseCommunaute("Case Communauté", 2);
-        cases[3] = new Propriete("Rue Matabiau", 60, new int[]{4,8,20,60,180,320,450}, "Marron", 50, 3);
+        cases[3] = new Propriete("Rue Matabiau", 3, marron,60, new int[]{4,8,20,60,180,320,450}, 50);
         cases[4] = new CaseImpots("IMPOTS SUR LE REVENU", 4, 200);
-        cases[5] = new CaseGare("Gare Matabiau", 200, new int[]{25,50,100,200,0,0,0}, 5);
-        cases[6] = new Propriete("Rue De La Colombette", 100, new int[]{6,12,30,90,270,400,550}, "Bleu Ciel", 50, 6);
+        cases[5] = new Gare("Gare Matabiau",5, 200, new int[]{25,50,100,200,0,0,0});         
+        cases[6] = new Propriete("Rue De La Colombette",6, Cyan,100, new int[]{6,12,30,90,270,400,550}, 50);
         cases[7] = new CaseChance("Case Chance", 7);
-        cases[8] = new Propriete("Rue Saint-Rome", 100, new int[]{6,12,30,90,270,400,550}, "Bleu Ciel", 50, 8);
-        cases[9] = new Propriete("Rue des Filatiers", 120, new int[]{8,16,40,100,300,450,600}, "Bleu Ciel", 50, 9);
-        // TODO : Créer une classe visiteSimple (Laisse le action vide pour le moment)
-        cases[11] = new Propriete("Place Esquirol", 140, new int[]{10,20,50,150,450,625,750}, "Violet", 100, 11);
-        cases[12] = new CaseService("Compagnie de distribution d'électricité", 150,12);
-        cases[13] = new Propriete("Avenue Honoré Serres", 140, new int[]{10,20,50,150,450,625,750}, "Violet", 100,13);
-        cases[14] = new Propriete("Place Wilson", 160, new int[]{12,24,60,180,500,700,900}, "Violet", 100,14);
-        cases[15] = new CaseGare("Réseau de métro", 200, new int[]{25,50,100,200,0,0,0},15);
-        cases[16] = new Propriete("Rue Gambetta", 180, new int[]{14,28,70,200,550,750,950}, "Orange", 100,16);
+        cases[8] = new Propriete("Rue Saint-Rome", 8,Cyan,100, new int[]{6,12,30,90,270,400,550},50);
+        cases[9] = new Propriete("Rue des Filatiers",9,Cyan, 120, new int[]{8,16,40,100,300,450,600}, 50);
+        cases[10] = new CaseVisiteSimple("Visite Simple", this.ID_CASE_VISITE_SIMPLE);
+        cases[11] = new Propriete("Place Esquirol",11,Pink, 140, new int[]{10,20,50,150,450,625,750}, 100);
+        cases[12] = new Service("Compagnie de distribution d'électricité", 12,150);
+        cases[13] = new Propriete("Avenue Honoré Serres", 13, Pink, 140, new int[]{10,20,50,150,450,625,750},100);
+        cases[14] = new Propriete("Place Wilson", 14, Pink, 160, new int[]{12,24,60,180,500,700,900}, 100);
+        cases[15] = new Gare("Réseau de métro",15, 200, new int[]{25,50,100,200,0,0,0});        
+        cases[16] = new Propriete("Rue Gambetta", 16,Orange, 180, new int[]{14,28,70,200,550,750,950},100);
         cases[17] = new CaseCommunaute("Case Communauté", 17);
-        cases[18] = new Propriete("Rue de la République", 180, new int[]{14,28,70,200,550,750,950}, "Orange", 100,18);
-        cases[19] = new Propriete("Boulevard Lazare-Carnot", 200, new int[]{16,32,80,220,600,800,1000}, "Orange", 100,19);
-        cases[20] = new CaseImpots("Parking Gratuit", 20, 0);
-        cases[21] = new Propriete("Quai de la Daurade", 220, new int[]{18,36,90,250,700,875,1050}, "Rouge", 150,21);
+        cases[18] = new Propriete("Rue de la République",18, Orange, 180, new int[]{14,28,70,200,550,750,950}, 100);
+        cases[19] = new Propriete("Boulevard Lazare-Carnot", 19, Orange, 200, new int[]{16,32,80,220,600,800,1000}, 100);
+        cases[20] = new CaseParking("Parking Gratuit", 20);         
+        cases[21] = new Propriete("Quai de la Daurade", 21, Rouge,220, new int[]{18,36,90,250,700,875,1050}, 150);
         cases[22] = new CaseChance("Case Chance",22);
-        cases[23] = new Propriete("Place Victor-Hugo", 220, new int[]{18,36,90,250,700,875,1050}, "Rouge", 150,23);
-        cases[24] = new Propriete("Place Occitanie", 240, new int[]{20,40,100,300,750,925,1100}, "Rouge", 150,24);
-        cases[25] = new CaseGare("Gare St-Agne", 200, new int[]{25,50,100,200,0,0,0},25);
-        cases[26] = new Propriete("Allé Jean-Jaurès", 260, new int[]{22,44,110,330,800,975,1150}, "Jaune", 150,26);
-        cases[27] = new Propriete("Rue du Taur", 260, new int[]{22,44,110,330,800,975,1150}, "Jaune", 150, 27);
-        cases[28] = new CaseCompagnie("Compagnie de distribution des eaux", 150,28))));
-        cases[29] = new Propriete("Place Saint-Georges", 280, new int[]{24,48,120,360,850,1025,1200}, "Jaune", 150,29);
-        cases[30] = new CasePrison("Direction La Prison", 30);
-        cases[31] = new Propriete("Rue de Metz", 300, new int[]{26,52,130,390,900,1100,1275}, "Vert", 200,31);
-        cases[32] = new Propriete("Quai de Tounis", 300, new int[]{26,52,130,390,900,1100,1275}, "Vert", 200,32);
+        cases[23] = new Propriete("Place Victor-Hugo",23, Rouge, 220, new int[]{18,36,90,250,700,875,1050},150);
+        cases[24] = new Propriete("Place Occitanie", 24, Rouge, 240, new int[]{20,40,100,300,750,925,1100},150);
+        cases[25] = new Gare("Gare St-Agne",25, 200, new int[]{25,50,100,200,0,0,0});      
+        cases[26] = new Propriete("Allé Jean-Jaurès", 26, Jaune, 260, new int[]{22,44,110,330,800,975,1150}, 150);
+        cases[27] = new Propriete("Rue du Taur", 27, Jaune, 260, new int[]{22,44,110,330,800,975,1150},150);
+        cases[28] = new Service("Compagnie de distribution des eaux", 28, 150);
+        cases[29] = new Propriete("Place Saint-Georges", 29, Jaune, 280, new int[]{24,48,120,360,850,1025,1200},150);        
+        cases[30] = new CaseDirectionPrison("Direction La Prison", 30);        
+        cases[31] = new Propriete("Rue de Metz", 31, Vert, 300, new int[]{26,52,130,390,900,1100,1275},200);
+        cases[32] = new Propriete("Quai de Tounis",32, Vert, 300, new int[]{26,52,130,390,900,1100,1275}, 200);
         cases[33] = new CaseCommunaute("Case Communauté", 33);
-        cases[34] = new Propriete("Rue Croix Baragnon", 320, new int[]{28,56,150,450,1000,1200,1400}, "Vert", 200,34);
-        cases[35] = new CaseGare("Téléo téléphérique", 200, new int[]{25,50,100,200,0,0,0} ,35);
-        cases[36] = new CaseChance("Case Chance",36);
-        cases[37] = new Propriete("Rue d'Alsace-Lorraine", 350, new int[]{35,70,175,500,1100,1300,1500}, "Bleu Roi", 200,37);
-        // TODO : Créer une classe CaseTaxeDeLuxe (Laisse le action vide pour le moment)
-        cases[39] = new Propriete("Rue du Capitole", 400, new int[]{50,100,200,600,1400,1700,2000}, "Bleu Roi", 200,39);
-        cases[40] = new CasePrison("Case Prison", 40);
+        cases[34] = new Propriete("Rue Croix Baragnon", 34, Vert, 320, new int[]{28,56,150,450,1000,1200,1400}, 200);
+        cases[35] = new Gare("Téléo téléphérique", 35, 200, new int[]{25,50,100,200,0,0,0});
+        cases[36] = new CaseChance("Case Chance",36);        
+        cases[37] = new Propriete("Rue d'Alsace-Lorraine",37, Bleu, 350, new int[]{35,70,175,500,1100,1300,1500},200);
+        cases[38] = new CaseTaxeLuxe("Taxe de Luxe",38,100);
+        cases[39] = new Propriete("Rue du Capitole",39, Bleu, 400, new int[]{50,100,200,600,1400,1700,2000}, 200);
+        cases[40] = new CasePrison("Case Prison", this.ID_CASE_PRISON , 50);
     }
 
     private void creerCartesChance(){
