@@ -141,12 +141,9 @@ public class Propriete extends Case {
         return this.loyer[nbMaison];
     }
 
-    /**
-     * Méthode héritée de la classe Case mais non implémentée pour une propriété.
-     * La méthode est destinée à être définie dans les sous-classes selon le comportement souhaité.
-     */
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        // TODO : Ecrire l'action qui la propriété
+        // TODO : Ecrire l'action associé la propriété
+        System.out.println("Le joueur est tombé sur la propiété : " + this.getNom());
     }
 
 	// |||||||||||||||||||| Annexe ||||||||||||||||||||||||||

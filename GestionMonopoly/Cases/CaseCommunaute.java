@@ -1,36 +1,22 @@
 package GestionMonopoly.Cases;
 
+import GestionMonopoly.Carte;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 
+/**
+ * La classe {@code CaseCommunaute} représente une case de type "Communauté" dans le jeu de Monopoly.
+ * Lorsqu'un joueur atterrit sur cette case, il doit tirer une carte "Communauté".
+ */
 public class CaseCommunaute extends Case {
 
- 
     public CaseCommunaute(String nom, int id) {
         super(nom, id);
     }
-  
+
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        //Supposons que nous avons une méthode pour tirer une carte
-        //Carte carte = tirerCarteCommunaute();
-        System.out.println(joueur.getNom() + " tire la carte " + "Test communauté");
-	    
-        //Supposons que les cartes ont une méthode pour exécuter une action
-        //carte.executerAction(joueur);
-
-        //Affichez les informations sur la carte tirée
-        //afficherCarte(carte);
+        Carte carte = plateau.tirerCarteCommunaute();
+        System.out.println(joueur.getNom() + " tire la carte " + carte.getNom());
+        carte.actionCarte(joueur, plateau);
     }
-
-    /** 
-    private Carte tirerCarteCommunaute() {
-        
-        return new CarteCommunaute();
-    }
-
-    private void afficherCarte(Carte carte) {
-        
-        System.out.println("Carte Communauté: " + carte.getNom() + " - " + carte.getDescription());
-    }*/
-
-   }
+}

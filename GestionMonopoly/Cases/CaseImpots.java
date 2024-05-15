@@ -18,11 +18,6 @@ public class CaseImpots extends Case {
         this.montantImpot = montantImpot;
     }
 
-    /**
-     * Méthode pour exécuter l'action de la case impôt, 
-     * retirant de l'argent du joueur et l'ajoutant au parc gratuit.
-     * @param joueur JoueurMonopoly  le joueur qui doit payer l'impôt
-     */
     public void action(JoueurMonopoly joueur, Plateau plateau) {
         System.out.println(joueur.getNom() + " paie " + this.montantImpot + "€ d'impôts.");
         joueur.debiter(this.montantImpot);

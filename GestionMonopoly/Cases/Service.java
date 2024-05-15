@@ -78,11 +78,8 @@ public class Service extends Case {
         this.proprietaire = null;
     }
 
-    /**
-     * Méthode héritée de la classe Case mais non implémentée pour un service.
-     * La méthode est destinée à être définie dans les sous-classes selon le comportement souhaité.
-     */
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        // À implémenter selon les besoins spécifiques de chaque type de service
+        // TODO : Ecrire l'action associé au service
+        System.out.println("Le joueur est tombé sur le service : " + this.getNom());
     }
 }

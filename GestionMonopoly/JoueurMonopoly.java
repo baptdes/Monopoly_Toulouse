@@ -212,12 +212,12 @@ public class JoueurMonopoly {
      */
     public void deplacer(int x) {
         if (x >= 0) {
-            this.position = (this.position + x) % (Plateau.nbCases - 1);
+            this.position = (this.position + x) % (Plateau.NB_CASES - 1);
         } else {
             // Si le déplacement est négatif (vers l'arrière), on ajoute 40 pour assurer un déplacement correct.
             // Par exemple, si la position est 3 et x est -5, on veut que la nouvelle position soit 38.
             // En ajoutant 40, on obtient 35 % 40 = 35, qui est correct.
-            this.position = (this.position + x + Plateau.nbCases - 1) % (Plateau.nbCases - 1);
+            this.position = (this.position + x + Plateau.NB_CASES - 1) % (Plateau.NB_CASES - 1);
         }
     }
 

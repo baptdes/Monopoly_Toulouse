@@ -1,31 +1,23 @@
 package GestionMonopoly.Cases;
 
+import GestionMonopoly.Carte;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 
+/**
+ * La classe {@code CaseChance} représente une case de type "Chance" dans le jeu de Monopoly.
+ * Lorsqu'un joueur atterrit sur cette case, il doit tirer une carte "Chance".
+ */
 public class CaseChance extends Case {
 
 
     public CaseChance(String nom, int id) {
-        super(nom,id);
+        super(nom, id);
     }
 
-    
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        // Supposons que nous avons une méthode pour tirer une carte de chance
-        // Carte carte = tirerCarteChance();
-
-        // les informations de la carte tirée
-        System.out.println(joueur.getNom() + " tire la carte " + "test");
-
-        // Exécute l'action de la carte tirée
-        //carte.actionCarte(joueur);
-        // Affichage de la carte
-        //afficherCarte(carte);
+        Carte carte = plateau.tirerCarteChance();
+        System.out.println(joueur.getNom() + " tire la carte " + carte.getNom());
+        carte.actionCarte(joueur, plateau);
     }
-    /**
-    private Carte tirerCarteChance() {
-        // La logique pour tirer une carte chance du jeu
-        return new CarteChance();
-    } */
 }

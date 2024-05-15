@@ -7,13 +7,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import GestionMonopoly.Cases.Case;
-import GestionMonopoly.Cases.CaseChance;
-import GestionMonopoly.Cases.CaseCommunaute;
-import GestionMonopoly.Cases.CaseImpots;
-import GestionMonopoly.Cases.CasePrison;
-import GestionMonopoly.Cases.GroupeProprietes;
-import GestionMonopoly.Cases.Propriete;
+import GestionMonopoly.Cases.*;
 import Interface_graphique.Panneau_joueur;
 import Interface_graphique.VuePlateau;
 
@@ -26,7 +20,9 @@ public class Plateau {
     private final int nbFaces = 6;
     private final int nbCartesChance = 10;
     private final int nbCarteCommunaute = 10;
-    public static final int nbCases = 41;
+    public static final int NB_CASES = 41;
+    public static final int ID_CASE_PRISON = 41;
+    public static final int ID_CASE_VISITE_SIMPLE = 41;
 
     private PaireDes des;
     private ArrayList<JoueurMonopoly> joueurs;
@@ -125,6 +121,14 @@ public class Plateau {
      */
     public Case getCase(int position) {
         return cases[position];
+    }
+
+    /**
+     * Récupère les dés associées au plateau.
+     * @return La case à la position spécifiée.
+     */
+    public PaireDes getDes() {
+        return this.des;
     }
 
     /**
@@ -228,6 +232,11 @@ public class Plateau {
 
     public void deplacerJoueur(JoueurMonopoly joueur, int deplacement){
         joueur.deplacer(deplacement);
+        fenetrePlateau.updatePositionPion(joueur.getPion());
+    }
+
+    public void setPositionJoueur(JoueurMonopoly joueur, int IdCase){
+        joueur.setPosition(IdCase);
         fenetrePlateau.updatePositionPion(joueur.getPion());
     }
 

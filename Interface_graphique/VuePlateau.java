@@ -127,7 +127,7 @@ public class VuePlateau extends JFrame {
     private void updatePlateauWidth(){
         Image scaledPlateau = resizeImage(pngPlateau.getImage(), getWidth()/2, getHeight());
         imagePlateau.setIcon(new ImageIcon(scaledPlateau));
-        int[] nbPionsParCases = new int[Plateau.nbCases];
+        int[] nbPionsParCases = new int[Plateau.NB_CASES];
         for (int i = 0; i < pions.length;i++){
             nbPionsParCases[pions[i].getPosition()]++;
             pions[i].updatePlateauWidth(scaleFactor,nbPionsParCases[pions[i].getPosition()]);

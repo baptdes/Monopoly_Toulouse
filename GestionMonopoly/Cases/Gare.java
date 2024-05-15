@@ -77,11 +77,8 @@ public class Gare extends Case {
         this.proprietaire = null;
     }
 
-    /**
-     * Méthode héritée de la classe Case mais non implémentée pour une gare.
-     * La méthode est destinée à être définie dans les sous-classes selon le comportement souhaité.
-     */
     public void action(JoueurMonopoly joueur, Plateau plateau) {
 		// TODO : Ecrire l'action associé à la gare
+        System.out.println("Le joueur est tombé sur la gare : " + this.getNom());
     }
 }
