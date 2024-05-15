@@ -148,6 +148,13 @@ public class JoueurMonopoly {
     }
 
     /**
+     * Vérifier si il possède au moins une carte "Sortie de prison".
+     */
+    public boolean possedeCarteSortiePrison() {
+        return this.carteSortiePrison > 0;
+    }
+
+    /**
      * Vérifier si le joueur possède toutes les propriétés d'un groupe donné.
      * @param groupe Le groupe de propriétés à vérifier.
      * @return true si le joueur possède toutes les propriétés du groupe, false sinon.
@@ -237,10 +244,17 @@ public class JoueurMonopoly {
     }
 
     /**
-     * Ajouter une carte "Sortie de prison" à la collection du joueur.
+     * Ajouter une carte "Sortie de prison".
      */
     public void addCarteSortiePrison() {
         this.carteSortiePrison++;
+    }
+
+    /**
+     * Retirer une carte "Sortie de prison".
+     */
+    public void removeCarteSortiePrison() {
+        this.carteSortiePrison--;
     }
 
     /**
