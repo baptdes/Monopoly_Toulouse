@@ -34,6 +34,7 @@ public class CasePrison extends Case {
     }
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
+        //TODO : Faire la même chose mais en interface graphique (une fenêtre qui demande les choix et fait les actions en fonction...)
         joueur.addToursEnPrison();
         System.out.print("Tour " + joueur.getToursPrison());
 
@@ -44,7 +45,9 @@ public class CasePrison extends Case {
         System.out.println("Option disponible :");
         System.out.println("1. Lancer un double");
         System.out.println("2. Payer 50M$ pour s'échapper");
-
+        if (joueur.possedeCarteSortiePrison()){
+            System.out.println("3. Utiliser carte sortie de prison");
+        }
         int choix = 1;
         System.out.println("Choix par défaut : Lancer un double");
 
@@ -64,6 +67,12 @@ public class CasePrison extends Case {
             case 2:
                 System.out.println(joueur.getNom() + " paye l'amende pour s'échapper de la prison.");
                 joueur.debiter(amende);
+                sortirJoueurPrison(joueur, plateau);
+                break;
+
+            case 3:
+                System.out.println(joueur.getNom() + " utilise une carte sortie de prison.");
+                joueur.removeCarteSortiePrison();
                 sortirJoueurPrison(joueur, plateau);
                 break;
 
