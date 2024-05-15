@@ -1,260 +1,378 @@
 package GestionMonopoly;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GestionMonopoly.Cases.Gare;
+import GestionMonopoly.Cases.GroupeProprietes;
+import GestionMonopoly.Cases.Propriete;
+import GestionMonopoly.Cases.Service;
 import Interface_graphique.Panneau_joueur;
+import Interface_graphique.Pion;
 
-public class JoueurMonopoly{
-	
-		private String nom;
-		private int id;
-		private int position;
-		private int argent;
-		private int toursEnPrison;
-		private boolean estBanqueroute;
-		private boolean enPrison;
-		private int CarteSortiePrison;
-		private ArrayList<CaseGare> gares;
-		private ArrayList<CaseService> service;
-		private Map<String, List<CaseTerrain>> terrainsparcouleur;
-		private Panneau_joueur affichage;
+/**
+ * La classe JoueurMonopoly représente un joueur dans le jeu Monopoly.
+ */
+public class JoueurMonopoly {
 
-		
-		public JoueurMonopoly(String nom, int id, int argent) {
-			assert(nom != null && id > 0 && argent > 0);
-			this.nom = nom;
-			this.id = id;
-			this.argent = argent;
-			this.position = 0;
-			this.toursEnPrison = 0;
-			this.CarteSortiePrison = 0;
-			this.gares = new ArrayList<CaseGare>();
-			this.service = new ArrayList<CaseService>();
-			this.terrainsparcouleur = new HashMap<String, List<CaseTerrain>>();
-			this.estBanqueroute = false;
-			this.enPrison = false;
-			this.affichage = new Panneau_joueur(nom,argent);
-		}
+    private static final double pourcentageReventePropriete = 1;
+    private static final double pourcentageReventeMaison = 0.5;
 
-		public Panneau_joueur getPanel(){
-			return this.affichage;
-		}
-		
-		public String getNom() {
-			return this.nom;
-		}
-		
-		public int getId() {
-			return this.id;
-		}
-		
-		public int getPosition() {
-			return this.position;
-		}
-		
-		public int getSolde() {
-			return this.argent;
-		}
-		public int getToursPrison() {
-			return this.toursEnPrison;
-		}
-		public boolean getEnPrison() {
-			return this.enPrison;
-		}
-		public void setNom(String nom) {
-			assert(nom != null);
-			this.nom = nom;
-		}
-		
-		public void setID( int id) {
-			assert(id > 0);
-			this.id = id;
-		}
-		
-		public void setArgent( int argent) {
-			assert(argent > 0);
-			this.argent = argent;
-		}
-		
-		// La position peut être égale à 0, ( case de départ ) ?
-		public void setPosition(int pos) {
-			assert(pos >= 0);
-			this.position = pos;
-		}
+    private String nom; // Le nom du joueur
+    private int id; // L'identifiant du joueur
+    private int position; // La position actuelle du joueur sur le plateau
+    private int argent; // Le montant d'argent que possède le joueur
+    private int toursEnPrison; // Le nombre de tours passés en prison
+    private boolean enPrison; // Indique si le joueur est actuellement en prison
+    private int carteSortiePrison; // Le nombre de cartes "Sortie de prison" que possède le joueur
+    private ArrayList<Gare> gares; // Les gares possédées par le joueur
+    private ArrayList<Service> services; // Les services publics (compagnies) possédés par le joueur
+    private Map<GroupeProprietes, List<Propriete>> proprietes; // Les propriétés possédées par le joueur, regroupées par groupe de propriétés
+    private Panneau_joueur panneau; // Le panneau d'affichage du joueur dans l'interface graphique
+    private Pion pion; // Le pion représentant le joueur sur le plateau
 
-		public void deplacerDe(int dep) {
-			assert(dep >= 0);
-			this.position = this.position + dep;
-		}
-		
-		public void setToursEnPrison(int toursEnPrison) {
-			assert(toursEnPrison >= 0);
-			this.toursEnPrison = toursEnPrison;
-		}
+    /**
+     * Constructeur de la classe JoueurMonopoly.
+     * @param nom Le nom du joueur.
+     * @param id L'identifiant du joueur.
+     * @param argent Le montant d'argent initial du joueur.
+     * @param couleur La couleur du pion représentant le joueur.
+     */
+    public JoueurMonopoly(String nom, int id, int argent, Color couleur) {
+        assert (nom != null && id > 0 && argent > 0);
+        this.nom = nom;
+        this.id = id;
+        this.argent = argent;
+        this.position = 0;
+        this.toursEnPrison = 0;
+        this.carteSortiePrison = 0;
+        this.gares = new ArrayList<>();
+        this.services = new ArrayList<>();
+        this.proprietes = new HashMap<>();
+        this.enPrison = false;
+        this.panneau = new Panneau_joueur(this, argent);
+        this.pion = new Pion(this, couleur);
+    }
 
-		public void addToursEnPrison() {
-			assert(this.toursEnPrison < 3);
-			this.toursEnPrison = this.toursEnPrison + 1;
-		}
-		
-		public void setEstPrison(boolean prison) {
-			this.enPrison = prison;			
-		}
-		
-				
-		public void setEstBanqueroute() {
-			if (this.argent == 0) {
-			this.estBanqueroute = true;
-			}
-		}
-		
-		
-		public void ajouterTerrain(CaseTerrain terrain) {
-			assert(terrain != null && this.argent > terrain.getprixachat());
-			if (terrain.peutacheterterrain()) {
-				if (terrainsparcouleur.containsKey(terrain.getcouleur())) {
-					List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
-					terrains.add(terrain);
-					affichage.addPropriété(terrain.getNom());
-					terrainsparcouleur.replace(terrain.getcouleur(),terrains);
-				} else {
-					List<CaseTerrain> terrains = new ArrayList<CaseTerrain>();
-					terrains.add(terrain);
-					affichage.addPropriété(terrain.getNom());
-					terrainsparcouleur.put(terrain.getcouleur(), terrains);
-				}				
-				this.argent -= terrain.getprixachat();				
-			}else {
-				System.out.println("Ce terrain appartient à un autre joueur");
-			}
-		}
-		public boolean Groupecomplet(CaseTerrain terrain) {
-			boolean Groupecomplet = false;
-			List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
-			int nbrprop = terrains.size(); //nbr de propriété pour la couleur, pour les marrons et bleu roi
-			// il faut que ce nbr = 2 et pour les autres couleurs = 3 pour completer le groupe
-			if ( terrain.getcouleur() == "Marron" || terrain.getcouleur() == "Bleu Roi") {
-				if (nbrprop == 2) {
-					Groupecomplet = true;
-				}
-			} else {
-				if (nbrprop == 3) { 
-					Groupecomplet = true;
-				}
-			}
-			return Groupecomplet;
-		}
-		
-		public void ajouterMaisonTerrain(CaseTerrain terrain) {
-					
-			if (Groupecomplet(terrain) == true) {
-				terrain.ajouterMaison();
-				this.argent -= terrain.getprixmaison();
-			} else {
-				System.out.println("Veuillez completez le groupe de la propriété avant de construire une maison");
-			}			
-		}
-		
-		public void vendreTerrain(CaseTerrain terrain) {
-		    assert(terrain != null && terrain.getnbrmaison() == 0); 
-		    // Tout d'abord on vérifie que ce terrain nous appartient
-		    boolean Nousappartient = false;
-		    for (List<CaseTerrain> liste : terrainsparcouleur.values()) {
-	            if (liste.contains(terrain)) {
-	                Nousappartient = true;
-	            }
-		    }
-		    if (Nousappartient = true) {
-		    	List<CaseTerrain> terrains = terrainsparcouleur.get(terrain.getcouleur());
-		    	terrains.remove(terrain);  // on supprime ce terrain de la liste associé à sa couleur
-		    	terrainsparcouleur.replace(terrain.getcouleur(),terrains);
-		    	this.argent += terrain.getprixachat(); // vendre à la banque avec le même prix d'achat
-		    } else {
-		    	System.out.println("Ce terrain ne vous appartient pas");
-		    }
-		}
-		
-		public void VendreMaisonTerrain(CaseTerrain terrain) {
-			terrain.vendremaison();
-			this.argent += terrain.getprixmaison()/2; //Vendre une maison à 50% du prix d'achat.
-		}
-		
-		public void ajouterGare(CaseGare gare) {
-			assert(gare != null && this.argent > gare.getprixachat());
-			if (gare.peutachetergare()) {
-				gares.add(gare);
-				affichage.addGare(gare.getNom());
-				this.argent -= gare.getprixachat();
-			}else {
-				System.out.println("Cette gare appartient à un autre joueur");
-			}
-		}
-		public void payerloyergare(CaseGare gare) {
-			assert(this.position == gare.getId() &&  gare.getprop() != null && gare.getprop().getNom() != this.nom );
-			int[] loyer = gare.getLoyer();
-			if (gares.size() == 1) {
-				this.argent -= loyer[0];
-			} else if ( gares.size() == 2) {
-				this.argent -= loyer[1];
-			} else if ( gares.size() == 3) {
-				this.argent -= loyer[2];
-			} else if ( gares.size() == 4) {
-				this.argent -= loyer[3];
-			}
-		}
-		
-		public void ajouterArgent(int montant) {
-			assert(montant >= 0);
-			this.argent += montant;
-		}
-		
-		public void retirerArgent(int montant) {
-			assert(montant >= 0);
-			this.argent -= montant;
-		}
-		
-		public void payerloyer(CaseTerrain terrain) {
-			assert(this.position == terrain.getId() &&  terrain.getprop() != null && terrain.getprop().getNom() != this.nom );
-			int[] loyer = terrain.getLoyer();
-			if (terrain.getnbrmaison() == 0 && !Groupecomplet(terrain)) { //loyer de la prop seule
-				this.argent -= loyer[0];
-			}else if (terrain.getnbrmaison() == 0 && Groupecomplet(terrain)) { //loyer pour le groupe complet
-				this.argent -= loyer[1];
-			}else if (terrain.getnbrmaison() == 1) { //loyer pour 1 maison
-				this.argent -= loyer[2];
-			}else if (terrain.getnbrmaison() == 2) {//loyer pour 2 maison
-				this.argent -= loyer[3];
-			}else if (terrain.getnbrmaison() == 3) {//loyer pour 3 maison
-				this.argent -= loyer[4];
-			}else if (terrain.getnbrmaison() == 4) {//loyer pour 4 maison
-				this.argent -= loyer[5];
-			}else if (terrain.getnbrmaison() == 5) { // 5 maisons == 1 hôtel 
-				this.argent -= loyer[6];
-			}		
-		}
-		
-		public void vendreGare(CaseGare gare) {
-		    assert(gare != null && gares.contains(gare)); 
-		    gares.remove(gare); 
-		    this.argent += gare.getprixachat(); // vendre à la banque avec le même prix d'achat
-		}
-		
-		/** public void vendreservice(CaseService service) {
-		    assert(service != null && service.contains(service)); 
-		    service.remove(service); 
-		    this.argent += service.getprixachat(); // vendre à la banque avec le même prix d'achat
-		}
-		
-		public void ajouterservice(CaseService serv) {
-			assert(serv != null && this.argent > serv.getprixachat());
-			if (serv.peutacheterservice()) {
-				service.add(serv);
-				this.argent -= serv.getprixachat();
-			}else {
-				System.out.println("Cette compagnie de distribution appartient à un autre joueur");
-		}
-		}*/
-		
+    // |||||||||||||||||||| Requêtes ||||||||||||||||||||||
+
+    /**
+     * Obtenir le nom du joueur.
+     * @return Le nom du joueur.
+     */
+    public String getNom() {
+        return this.nom;
+    }
+
+    /**
+     * Obtenir l'identifiant du joueur.
+     * @return L'identifiant du joueur.
+     */
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * Obtenir la position actuelle du joueur sur le plateau.
+     * @return La position du joueur.
+     */
+    public int getPosition() {
+        return this.position;
+    }
+
+    /**
+     * Obtenir le solde d'argent du joueur.
+     * @return Le montant d'argent que possède le joueur.
+     */
+    public int getSolde() {
+        return this.argent;
+    }
+
+    /**
+     * Obtenir le nombre de tours passés en prison par le joueur.
+     * @return Le nombre de tours passés en prison.
+     */
+    public int getToursPrison() {
+        return this.toursEnPrison;
+    }
+
+    /**
+     * Vérifier si le joueur est actuellement en prison.
+     * @return true si le joueur est en prison, false sinon.
+     */
+    public boolean estEnPrison() {
+        return this.enPrison;
+    }
+
+    /**
+     * Vérifier si le joueur est en situation de banqueroute.
+     * @return true si le joueur est en banqueroute (sans argent), false sinon.
+     */
+    public boolean estBanqueroute() {
+        return this.argent <= 0;
+    }
+
+    /**
+     * Obtenir le panneau d'affichage du joueur dans l'interface graphique.
+     * @return Le panneau d'affichage du joueur.
+     */
+    public Panneau_joueur getPanel() {
+        return this.panneau;
+    }
+
+    /**
+     * Obtenir le pion représentant le joueur sur le plateau.
+     * @return Le pion du joueur.
+     */
+    public Pion getPion() {
+        return this.pion;
+    }
+
+    /**
+     * Obtenir le nombre de gares possédées par le joueur.
+     * @return Le nombre de gares possédées.
+     */
+    public int getNbGares() {
+        return this.gares.size();
+    }
+
+    /**
+     * Obtenir le nombre de services publics (compagnies) possédés par le joueur.
+     * @return Le nombre de services possédés.
+     */
+    public int getNbServices() {
+        return this.services.size();
+    }
+
+    /**
+     * Vérifier si le joueur possède toutes les propriétés d'un groupe donné.
+     * @param groupe Le groupe de propriétés à vérifier.
+     * @return true si le joueur possède toutes les propriétés du groupe, false sinon.
+     */
+    public boolean possedeGroupe(GroupeProprietes groupe) {
+        List<Propriete> proprietesGroupe = proprietes.get(groupe);
+        return proprietesGroupe != null && proprietesGroupe.size() == groupe.getNbProprietes();
+    }
+
+    // |||||||||||||||||||| Commande ||||||||||||||||||||||
+
+    /**
+     * Définir le nom du joueur.
+     * @param nom Le nouveau nom du joueur.
+     */
+    public void setNom(String nom) {
+        assert (nom != null);
+        this.nom = nom;
+    }
+
+    /**
+     * Définir l'identifiant du joueur.
+     * @param id Le nouvel identifiant du joueur.
+     */
+    public void setID(int id) {
+        assert (id > 0);
+        this.id = id;
+    }
+
+    /**
+     * Créditer le compte du joueur avec un montant donné.
+     * @param montant Le montant à créditer.
+     */
+    public void crediter(int montant) {
+        assert (montant >= 0);
+        this.argent += montant;
+        panneau.updateArgent(this.argent);
+    }
+
+    /**
+     * Débiter le compte du joueur avec un montant donné.
+     * @param montant Le montant à débiter.
+     */
+    public void debiter(int montant) {
+        assert (montant >= 0);
+        this.argent -= montant;
+        panneau.updateArgent(this.argent);
+    }
+
+    /**
+     * Définir la position du joueur sur le plateau.
+     * @param pos La nouvelle position du joueur.
+     */
+    public void setPosition(int pos) {
+        assert (pos >= 0);
+        this.position = pos;
+    }
+
+    /**
+     * Déplacer le joueur d'un certain nombre de cases sur le plateau.
+     * @param x Le nombre de cases à avancer (ou reculer si x est négatif).
+     */
+    public void deplacer(int x) {
+        if (x >= 0) {
+            this.position = (this.position + x) % (Plateau.NB_CASES - 1);
+        } else {
+            // Si le déplacement est négatif (vers l'arrière), on ajoute 40 pour assurer un déplacement correct.
+            // Par exemple, si la position est 3 et x est -5, on veut que la nouvelle position soit 38.
+            // En ajoutant 40, on obtient 35 % 40 = 35, qui est correct.
+            this.position = (this.position + x + Plateau.NB_CASES - 1) % (Plateau.NB_CASES - 1);
+        }
+    }
+
+    /**
+     * Ajouter un tour de plus passé en prison par le joueur.
+     */
+    public void addToursEnPrison() {
+        assert (this.toursEnPrison < 3);
+        this.toursEnPrison++;
+    }
+
+    /**
+     * Réinitialiser le nombre de tours passés en prison par le joueur.
+     */
+    public void resetToursEnPrison() {
+        this.toursEnPrison = 0;
+    }
+
+    /**
+     * Ajouter une carte "Sortie de prison" à la collection du joueur.
+     */
+    public void addCarteSortiePrison() {
+        this.carteSortiePrison++;
+    }
+
+    /**
+     * Définir si le joueur est actuellement en prison.
+     * @param estPrisonnier true si le joueur est en prison, false sinon.
+     */
+    public void setEstEnPrison(boolean estPrisonnier) {
+        this.enPrison = estPrisonnier;
+    }
+
+    /**
+     * Acheter une propriété donnée.
+     * @param propriete La propriété à acheter.
+     * @return true si l'achat est réussi, false sinon.
+     */
+    public boolean acheterPropriete(Propriete propriete) {
+        if (this.argent < propriete.getValeurAchat()) {
+            return false; // Vérifier si le joueur a assez d'argent pour acheter la propriété
+        }
+        if (propriete.estAchetable()) {
+			propriete.setProprietaire(this);
+            GroupeProprietes groupe = propriete.getGroupe();
+            proprietes.computeIfAbsent(groupe, k -> new ArrayList<>()).add(propriete);
+            panneau.addPropriété(propriete.getNom());
+            this.debiter(propriete.getValeurAchat());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Acheter une maison pour une propriété donnée.
+     * @param propriete La propriété pour laquelle acheter une maison.
+     * @return true si l'achat est réussi, false sinon.
+     */
+    public boolean acheterMaison(Propriete propriete) {
+        if (this.argent < propriete.getPrixMaison()) {
+            return false; // Vérifier si le joueur a assez d'argent pour acheter une maison
+        }
+        if (possedeGroupe(propriete.getGroupe())) {
+            propriete.addMaison();
+            this.debiter(propriete.getPrixMaison());
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Vendre une propriété donnée.
+     * @param propriete La propriété à vendre.
+     * @return true si la vente est réussie, false sinon.
+     */
+    public boolean vendrePropriete(Propriete propriete) {
+        if (propriete.getNbMaison() != 0) {
+            return false; // Vérifier si la propriété a des maisons
+        }
+        List<Propriete> proprietesGroupe = proprietes.get(propriete.getGroupe());
+        if (proprietesGroupe != null) {
+			propriete.removeProprietaire();
+            proprietesGroupe.remove(propriete);
+			this.crediter((int) (propriete.getValeurAchat() * pourcentageReventePropriete));
+			return true;
+        }
+        return false;
+    }
+
+    /**
+     * Vendre une maison d'une propriété donnée.
+     * @param propriete La propriété dont vendre une maison.
+     * @return true si la vente est réussie, false sinon.
+     */
+    public boolean vendreMaisonPropriete(Propriete propriete) {
+        if (propriete.getNbMaison() == 0) {
+            return false; // Vérifier si la propriété a des maisons à vendre
+        }
+        propriete.vendreMaison();
+        this.crediter((int) (propriete.getPrixMaison() * pourcentageReventeMaison));
+        return true;
+    }
+
+    /**
+     * Acheter une gare.
+     * @param gare La gare à acheter.
+     * @return true si l'achat est réussi, false sinon.
+     */
+    public boolean acheterGare(Gare gare) {
+        if (this.argent < gare.getValeurAchat()) {
+            return false; // Vérifier si le joueur a assez d'argent pour acheter la gare
+        }
+        if (gare.estAchetable()) {
+            this.debiter(gare.getValeurAchat());
+			gare.setProprietaire(this);
+            gares.add(gare);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Vendre une gare.
+     * @param gare La gare à vendre.
+     */
+    public void vendreGare(Gare gare) {
+        this.gares.remove(gare);
+        this.crediter((int) (gare.getValeurAchat() * pourcentageReventePropriete));
+		gare.removeProprietaire();
+    }
+
+    /**
+     * Acheter un service public (compagnie).
+     * @param service Le service public à acheter.
+     * @return true si l'achat est réussi, false sinon.
+     */
+    public boolean acheterService(Service service) {
+        if (this.argent < service.getValeurAchat()) {
+            return false; // Vérifier si le joueur a assez d'argent pour acheter le service
+        }
+        if (service.estAchetable()) {
+            this.debiter(service.getValeurAchat());
+			service.setProprietaire(this);
+            services.add(service);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Vendre un service public (compagnie).
+     * @param service Le service public à vendre.
+     */
+    public void vendreService(Service service) {
+        this.services.remove(service);
+        this.crediter((int) (service.getValeurAchat() * pourcentageReventePropriete));
+    }
 }
