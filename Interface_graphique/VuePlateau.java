@@ -73,8 +73,7 @@ public class VuePlateau extends JFrame {
         bFinTour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterPropriete((Propriete) plateau.getCase(3));
-
+                plateau.getCase(0).action(plateau.getJoueurActif(), plateau);;
             }
         });
 

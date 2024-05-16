@@ -32,7 +32,7 @@ public class Panneau_joueur extends RoundedPanel {
         nomJoueurLabel.setFont(VuePlateau.nomJoueurFont);
 
         JPanel nomJoueurPanel = new JPanel();
-        nomJoueurPanel.setBackground(Color.decode("#f0b27a"));
+        nomJoueurPanel.setBackground(joueur.getPion().getCouleur());
         nomJoueurPanel.setLayout(new BoxLayout(nomJoueurPanel, BoxLayout.Y_AXIS));
         nomJoueurPanel.add(Box.createVerticalStrut(0));
         nomJoueurPanel.add(nomJoueurLabel);
@@ -89,7 +89,7 @@ public class Panneau_joueur extends RoundedPanel {
     }
 
     public void updateArgent(int argent) {
-        this.argent.setText("" + argent);
+        this.argent.setText(argent + " M$");
     }
 
     public void addPropriété(String propriété){

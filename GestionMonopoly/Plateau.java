@@ -149,6 +149,14 @@ public class Plateau {
     }
 
     /**
+     * Récupère la case sur laquelle se trouve le joueur dont c'est le tour.
+     * @return La case sur laquelle se trouve le joueur actif.
+     */
+    public Case getCaseJoueurActif(){
+        return this.getCase(getJoueurActif().getPosition());
+    }
+
+    /**
      * Récupère le joueur actif, c'est-à-dire celui dont c'est le tour de jouer.
      * @return Le joueur actif.
      */
@@ -241,6 +249,11 @@ public class Plateau {
     public void deplacerJoueur(JoueurMonopoly joueur, int deplacement){
         joueur.deplacer(deplacement);
         fenetrePlateau.updatePositionPion(joueur.getPion());
+    }
+
+    public void deplacerJoueurActif(int deplacement){
+        getJoueurActif().deplacer(deplacement);
+        fenetrePlateau.updatePositionPion(getJoueurActif().getPion());
     }
 
     public void setPositionJoueur(JoueurMonopoly joueur, int IdCase){
