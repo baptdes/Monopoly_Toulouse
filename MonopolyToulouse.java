@@ -19,19 +19,7 @@ public class MonopolyToulouse {
         // ------------------Jouer la partie -------------------
         
         while (!plateau.partieFinie()){
-            // 1 - Le joueur actif lance les dés
-            plateau.getDes().lancer();
-            
-            // 2 - Le joueur actif avance
-            plateau.deplacerJoueurActif(plateau.getDes().getResultat());
-
-            // 3 - Activation de l'effet de la case sur laquelle il se trouve
-            plateau.getCaseJoueurActif().action(plateau.getJoueurActif(), plateau);
-
-            // TODO : Veut-il vendre ?
-
-            // 5 - Son tour est fini
-            
+            plateau.jouerTour();
         }
         
     }

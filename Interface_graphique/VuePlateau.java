@@ -73,7 +73,7 @@ public class VuePlateau extends JFrame {
         bFinTour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getCase(0).action(plateau.getJoueurActif(), plateau);;
+                plateau.tourEstFini();
             }
         });
 
@@ -84,7 +84,7 @@ public class VuePlateau extends JFrame {
         bFinPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterGare((Gare) plateau.getCase(5));
+                plateau.getCase(0).action(plateau.getJoueurActif(), plateau);;
             }
         });
 

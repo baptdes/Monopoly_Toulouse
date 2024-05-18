@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import GestionMonopoly.Cases.*;
 import Interface_graphique.Panneau_joueur;
 import Interface_graphique.VuePlateau;
+import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
 /**
  * La classe Plateau représente le plateau de jeu du Monopoly.
@@ -18,8 +19,8 @@ import Interface_graphique.VuePlateau;
 public class Plateau {
 
     private final int nbFaces = 6;
-    private final int nbCartesChance = 10;
-    private final int nbCarteCommunaute = 10;
+    private final int nbCartesChance = 1;
+    private final int nbCarteCommunaute = 1;
     public static final int NB_CASES = 41;
     public static final int ID_CASE_PRISON = 40;
     public static final int ID_CASE_VISITE_SIMPLE = 10;
@@ -30,7 +31,9 @@ public class Plateau {
     private Carte[] cartesCommunaute;
     private Case[] cases;
     private int nbTour;
+    private boolean tourFini;
     private VuePlateau fenetrePlateau;
+    private JFrame fenetreAction = null;
 
     // --------- Groupes de propriétés -------------
     private GroupeProprietes marron = new GroupeProprietes(new Color(125, 93, 57));
@@ -56,7 +59,7 @@ public class Plateau {
         this.nbTour = 1;
         this.fenetrePlateau = new VuePlateau(this);
         this.cartesChance = new Carte[nbCartesChance];
-        this.cartesCommunaute = new Carte[nbCartesChance];
+        this.cartesCommunaute = new Carte[nbCarteCommunaute];
         this.cases = new Case[41];
         creerCases();
         creerCartesChance();
@@ -113,11 +116,11 @@ public class Plateau {
     }
 
     private void creerCartesChance(){
-        // TODO : A completer
+        cartesChance[0] = new CarteArgent("Chanceux", "Vous avez trouver une liasse de billet par terre", 100);
     }
 
     private void creerCartesCommunaute(){
-        // TODO : A completer
+        cartesCommunaute[0] = new CarteArgent("Quartier", "Votre quartier veut rénover votre rue, vous devez participer à hauteur de 200 M$", 200);
     }
 
     // ||||||||||||||||||||||||| Requêtes ||||||||||||||||||||||||||||||
@@ -162,7 +165,7 @@ public class Plateau {
      */
     public JoueurMonopoly getJoueurActif(){
         // Les joueurs joue chacun à leur tour en commencant par le premier
-        return this.joueurs.get(nbTour % joueurs.size() - 1);
+        return this.joueurs.get((nbTour - 1) % joueurs.size());
     }
 
     /**
@@ -246,13 +249,24 @@ public class Plateau {
 
     // ||||||||||||||||||||||||| Commandes ||||||||||||||||||||||||||||||
 
+    public void setFenetreAction(JFrame fenetre){
+        if (this.fenetreAction != null){
+            this.fenetreAction.dispose();
+        }
+        this.fenetreAction = fenetre;
+    }
+
     public void deplacerJoueur(JoueurMonopoly joueur, int deplacement){
+        int oldPosition = joueur.getPosition();
         joueur.deplacer(deplacement);
         fenetrePlateau.updatePositionPion(joueur.getPion());
+        if (oldPosition > joueur.getPosition()){
+            getCase(0).action(joueur, this);
+        }
     }
 
     public void deplacerJoueurActif(int deplacement){
-        getJoueurActif().deplacer(deplacement);
+        deplacerJoueur(getJoueurActif(), deplacement);
         fenetrePlateau.updatePositionPion(getJoueurActif().getPion());
     }
 
@@ -266,5 +280,63 @@ public class Plateau {
         this.fenetrePlateau.setExtendedState(JFrame.MAXIMIZED_BOTH);
         // Rendre la fenêtre visible
         this.fenetrePlateau.setVisible(true);
+    }
+
+    public void tourEstFini(){
+        tourFini = true;
+    }
+
+    public void attendre(int t){
+        try {
+            Thread.sleep(t);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void jouerTour(){
+        if (!getJoueurActif().estEnPrison()){
+            // 1 - Le joueur actif lance les dés
+            this.getDes().lancer();
+            JFrame fenetreLancerDes = new FenetreMessageSimple(getJoueurActif().getNom() + " lance les dés ...", Color.white, Color.black);
+            setFenetreAction(fenetreLancerDes);
+            fenetreLancerDes.setVisible(true);
+            attendre(1000);
+            setFenetreAction(null);
+
+            // 2 - Affiché le résultat du dé
+            JFrame fenetreDes = new FenetreMessageSimple(getJoueurActif().getNom() + " a fait " + des.getDe1() +" et "+ des.getDe2() + "\n Résultat : " + des.getResultat(), Color.white, Color.black);
+            setFenetreAction(fenetreDes);
+            fenetreDes.setVisible(true);
+
+            attendre(2000);
+            setFenetreAction(null);
+
+            // 3 - Le joueur actif avance
+            deplacerJoueurActif(getDes().getResultat());
+            System.out.print("Le joueur " + getJoueurActif().getNom() + " est tombé sur la case " + getCaseJoueurActif().getNom());
+
+            // 4 - Activation de l'effet de la case sur laquelle il se trouve
+            getCaseJoueurActif().action(getJoueurActif(), this);
+
+            // TODO : Faire l'étape pour vendre ses propriétés
+
+            // 5 - Son tour est fini
+            while (!tourFini){
+                attendre(1);
+            } //Atendre t'en que le joueur ne signifit pas qu'il a terminé
+            tourFini = false;
+
+            if (!des.estDouble()){ //Rejoue si il a fai un double
+                nbTour ++;
+                return;
+            }
+
+            JFrame fenetreDouble = new FenetreMessageSimple(getJoueurActif().getNom() + " rejoue, elle avait fait un double !", Color.white, Color.black);
+            setFenetreAction(fenetreDouble);
+            fenetreDouble.setVisible(true);
+            attendre(1000);
+            setFenetreAction(null);
+        }
     }
 }
