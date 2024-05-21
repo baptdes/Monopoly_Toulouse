@@ -2,62 +2,63 @@ package Interface_graphique;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-
-import GestionMonopoly.JoueurMonopoly;
-import GestionMonopoly.Plateau;
-import GestionMonopoly.Cases.Gare;
-import GestionMonopoly.Cases.Propriete;
-
+import GestionMonopoly.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class VuePlateau extends JFrame {
-
     // Constantes publiques pour le style des textes
-    final public static Font argentFont = new Font("DejaVu Sans", Font.PLAIN, 16);
-    final public static Font textFont = new Font("DejaVu Sans", Font.PLAIN, 14);
-    final public static Font titleFont = new Font("DejaVu Sans", Font.BOLD, 16);
-    final public static Font nomJoueurFont = new Font("Loma", Font.BOLD, 20);
+    public static final Font argentFont = new Font("DejaVu Sans", Font.PLAIN, 16);
+    public static final Font textFont = new Font("DejaVu Sans", Font.PLAIN, 14);
+    public static final Font titleFont = new Font("DejaVu Sans", Font.BOLD, 16);
+    public static final Font nomJoueurFont = new Font("Loma", Font.BOLD, 20);
 
-    // Données sur l'image du imagePlateau
-    final private ImageIcon pngPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
-    final private int originalWidth = pngPlateau.getIconWidth(); 
-    final private int originalHeight = pngPlateau.getIconHeight();
+    // Données sur l'image du plateau
+    private final ImageIcon pngPlateau = new ImageIcon("Plateau_monopoly_toulouse.png");
+    private final int originalWidth = pngPlateau.getIconWidth();
+    private final int originalHeight = pngPlateau.getIconHeight();
 
-    /** Taille de référence pour calculer l'emplacement des éléments */
-    final public int refTaille = 850; 
+    public final int refTaille = 850;
 
-    //Attributs
-    private Plateau plateau;
+    // Attributs
+    private int[] cases_occupées = new int[41];
+    private ArrayList<JoueurMonopoly> joueurs;
     private Pion[] pions;
-    private JLabel imagePlateau;
+    private JLabel plateau;
     private JButton bFinTour;
     private JButton bFinPartie;
+    private Plateau plateauDeJeu;
 
-    /** Facteur pour adapter la taille des éléments à la taille de la fenêtre */
     private double scaleFactor;
 
-    public VuePlateau(Plateau plateau) {
-        // ---- Création de la fenêtre + paramètrages ----
+    public VuePlateau(Pion[] pions, JoueurMonopoly[] joueurs, Plateau plateauDeJeu) {
         super("Monopoly Toulouse");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.X_AXIS));
         this.setBackground(Color.decode("#fdf2e9"));
-        this.setSize(new Dimension(500,500));
+        this.setSize(new Dimension(500, 500));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-        // ------------- Remplissage Jframe --------------
+        this.pions = pions;
+        this.plateauDeJeu = plateauDeJeu;
+        this.joueurs = new ArrayList<>();
+        for (JoueurMonopoly joueur : joueurs) {
+            this.joueurs.add(joueur);
+        }
 
-        //////// Image du imagePlateau /////////
-        // Redimmensioner le imagePlateau
+        setupPlateau();
+        setupButtons();
+        setupPionsEtJoueurs();
+    }
+
+    private void setupPlateau() {
         Image scaledPlateau = pngPlateau.getImage().getScaledInstance(850, 850, Image.SCALE_SMOOTH);
         JLabel plateauLabel = new JLabel(new ImageIcon(scaledPlateau));
-        plateauLabel.setLayout(null); // Permet de positionner les éléments absolument
-        this.imagePlateau = plateauLabel;
+        plateauLabel.setLayout(null);
+        this.plateau = plateauLabel;
         this.add(plateauLabel);
 
-        // Création de l'écouteur de redimensionnement
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -65,50 +66,72 @@ public class VuePlateau extends JFrame {
             }
         });
 
-        /////////// Les Boutons ///////////
-        // 1 -- Bouton de fin de tour
-        this.bFinTour = new ModernButton("Finir le tour",Color.darkGray,Color.white);
+        // Ajout des boutons pour chaque case propriété
+        for (int i = 0; i < 40; i++) {
+            final int caseIndex = i; // Déclarez une nouvelle variable locale finale
+            JButton caseButton = new JButton();
+            caseButton.setBounds(getCaseBounds(caseIndex)); // Remplacez getCaseBounds par une méthode pour obtenir les
+                                                            // coordonnées de chaque case
+            caseButton.setContentAreaFilled(false);
+            caseButton.setBorderPainted(false);
+            caseButton.addActionListener(e -> showProprieteWindow(caseIndex));
+            plateau.add(caseButton);
+        }
+    }
+
+    private void showProprieteWindow(int caseIndex) {
+        JoueurMonopoly joueur = getJoueurActuel();
+        Case caseActuelle = plateauDeJeu.getCase(caseIndex);
+
+        if (caseActuelle instanceof CaseTerrain) {
+            CaseTerrain caseTerrain = (CaseTerrain) caseActuelle;
+            new FenetrePropriete(joueur, caseTerrain).setVisible(true);
+        }
+    }
+
+    private JoueurMonopoly getJoueurActuel() {
+        // Ici, nous retournons toujours le premier joueur pour simplifier
+        return joueurs.get(0);
+    }
+
+    private Rectangle getCaseBounds(int caseIndex) {
+        // Cette méthode pour retourner les coordonnées et dimensions de
+        // chaque case
+        return new Rectangle(0, 0, 100, 100); // Exemple simplifié
+    }
+
+    private void setupButtons() {
+        bFinTour = new ModernButton("Finir le tour", Color.darkGray, Color.white);
         bFinTour.setBounds(400, 525, 130, 35);
-        imagePlateau.add(bFinTour);
-        bFinTour.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterPropriete((Propriete) plateau.getCase(3));
-
-            }
+        plateau.add(bFinTour);
+        bFinTour.addActionListener(e -> {
+            deplacerPion(0, pions[0].getPosition() + 1);
         });
 
-        // 2 -- Bouton de fin de partie
-        this.bFinPartie = new ModernButton("Finir la partie",new Color(123, 36, 28),Color.white);
+        bFinPartie = new ModernButton("Finir la partie", new Color(123, 36, 28), Color.white);
         bFinPartie.setBounds(540, 525, 140, 35);
-        imagePlateau.add(bFinPartie);
-        bFinPartie.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterGare((Gare) plateau.getCase(5));
-            }
+        plateau.add(bFinPartie);
+        bFinPartie.addActionListener(e -> {
+            deplacerPion(0, pions[0].getPosition() - 1);
         });
+    }
 
-        /////////// Les pions et panneaux joueurs ///////////
-        JoueurMonopoly joueurActuel;
-        this.pions = new Pion[plateau.getNbJoueurs()];
+    private void setupPionsEtJoueurs() {
+        for (int i = 0; i < pions.length; i++) {
+            plateau.add(pions[i]);
+            cases_occupées[pions[i].getPosition()]++;
+        }
+
         JPanel joueursPanel = new JPanel(new GridLayout(2, 3, 10, 10));
-        // Création d'une bordure avec des marges de 10 pixels
         Border border = BorderFactory.createEmptyBorder(5, 10, 5, 5);
         joueursPanel.setBorder(border);
-        for (int i = 0; i < plateau.getNbJoueurs();i++){
-            joueurActuel = plateau.getJoueur(i);
-            pions[i] = joueurActuel.getPion();
-            imagePlateau.add(pions[i]);
-            joueursPanel.add(joueurActuel.getPanel());
+        for (JoueurMonopoly joueur : joueurs) {
+            Panneau_joueur panneauJoueur = joueur.getPanel();
+            joueursPanel.add(panneauJoueur);
         }
         this.add(joueursPanel);
     }
 
-    /** Fonction pour redimensionner une image tout en conservant ses proportions d'origine 
-     * @param image Image à redimensionner
-     * @param width Largeur voulue
-     * */ 
     private Image resizeImage(Image image, int width, int height) {
         int newWidth, newHeight;
         if (width * originalHeight < height * originalWidth) {
@@ -123,30 +146,50 @@ public class VuePlateau extends JFrame {
         return image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
     }
 
-    /** Met à jour la taille de tous les éléments de la fenêtre */
-    private void updatePlateauWidth(){
-        Image scaledPlateau = resizeImage(pngPlateau.getImage(), getWidth()/2, getHeight());
-        imagePlateau.setIcon(new ImageIcon(scaledPlateau));
-        int[] nbPionsParCases = new int[Plateau.NB_CASES];
-        for (int i = 0; i < pions.length;i++){
-            nbPionsParCases[pions[i].getPosition()]++;
-            pions[i].updatePlateauWidth(scaleFactor,nbPionsParCases[pions[i].getPosition()]);
+    private void updatePlateauWidth() {
+        Image scaledPlateau = resizeImage(pngPlateau.getImage(), getWidth() / 2, getHeight());
+        plateau.setIcon(new ImageIcon(scaledPlateau));
+        for (int i = 0; i < pions.length; i++) {
+            cases_occupées[pions[i].getPosition()] = 0;
         }
-        this.bFinPartie.setBounds((int) (400 * scaleFactor),(int) (525 * scaleFactor),(int) (130 * scaleFactor),(int) (35 * scaleFactor));
-        this.bFinTour.setBounds((int) (540 * scaleFactor),(int) (525 * scaleFactor),(int) (140* scaleFactor),(int) (35 * scaleFactor));
+        for (int i = 0; i < pions.length; i++) {
+            pions[i].updatePlateauWidth(scaleFactor, cases_occupées[pions[i].getPosition()]);
+            cases_occupées[pions[i].getPosition()]++;
+        }
+        bFinPartie.setBounds((int) (400 * scaleFactor), (int) (525 * scaleFactor), (int) (130 * scaleFactor),
+                (int) (35 * scaleFactor));
+        bFinTour.setBounds((int) (540 * scaleFactor), (int) (525 * scaleFactor), (int) (140 * scaleFactor),
+                (int) (35 * scaleFactor));
     }
 
-    /** Mettre à jour l'emplacement d'un pion sur l'imagePlateau dans la VuePlateau
-     * @param pion pion qu'il faut mettre à jour
-    */
-    public void updatePositionPion(Pion pion){
-        int position = pion.getPosition();
-        int nbPionsCase = -1;
-        for (int i = 0; i < pions.length;i++){
-            if (pions[i].getPosition() == position){
-                nbPionsCase++;
+    public void deplacerPion(int nbPion, int nbCase) {
+        if (nbPion >= pions.length || nbPion < 0) {
+            throw new CaseInvalideException();
+        }
+        if (nbCase > 40) {
+            nbCase = nbCase % 40;
+        }
+        cases_occupées[pions[nbPion].getPosition()]--;
+        if (cases_occupées[nbCase] > 0) {
+            cases_occupées[nbCase] = 0;
+            for (Pion pion : pions) {
+                if (pion.getPosition() == nbCase) {
+                    pion.updatePlateauWidth(scaleFactor, cases_occupées[pion.getPosition()]);
+                    cases_occupées[nbCase]++;
+                }
             }
         }
-        pion.updatePosition(nbPionsCase);
+        pions[nbPion].setPositionPion(nbCase, cases_occupées[nbCase]);
+        cases_occupées[pions[nbPion].getPosition()]++;
+        verifierCasePion(nbCase);
+    }
+
+    private void verifierCasePion(int position) {
+        Case caseActuelle = plateauDeJeu.getCase(position);
+        if (caseActuelle instanceof CaseTerrain) {
+            JoueurMonopoly joueur = getJoueurActuel();
+            CaseTerrain caseTerrain = (CaseTerrain) caseActuelle;
+            new FenetrePropriete(joueur, caseTerrain).setVisible(true);
+        }
     }
 }
