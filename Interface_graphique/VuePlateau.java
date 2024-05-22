@@ -5,12 +5,8 @@ import javax.swing.border.Border;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
-import GestionMonopoly.Cases.Gare;
-import GestionMonopoly.Cases.Propriete;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class VuePlateau extends JFrame {
 
@@ -34,6 +30,8 @@ public class VuePlateau extends JFrame {
     private JLabel imagePlateau;
     private JButton bFinTour;
     private JButton bFinPartie;
+    private JButton bLancerDes;
+    private JLabel joueurActuel;
 
     /** Facteur pour adapter la taille des éléments à la taille de la fenêtre */
     private double scaleFactor;
@@ -46,6 +44,8 @@ public class VuePlateau extends JFrame {
         this.setBackground(Color.decode("#fdf2e9"));
         this.setSize(new Dimension(500,500));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        this.plateau = plateau;
 
         // ------------- Remplissage Jframe --------------
 
@@ -68,39 +68,56 @@ public class VuePlateau extends JFrame {
         /////////// Les Boutons ///////////
         // 1 -- Bouton de fin de tour
         this.bFinTour = new ModernButton("Finir le tour",Color.darkGray,Color.white);
-        bFinTour.setBounds(400, 525, 130, 35);
         imagePlateau.add(bFinTour);
         bFinTour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterPropriete((Propriete) plateau.getCase(3));
-
+                plateau.tourEstFini();
             }
         });
 
         // 2 -- Bouton de fin de partie
         this.bFinPartie = new ModernButton("Finir la partie",new Color(123, 36, 28),Color.white);
-        bFinPartie.setBounds(540, 525, 140, 35);
         imagePlateau.add(bFinPartie);
         bFinPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().acheterGare((Gare) plateau.getCase(5));
+                plateau.getCase(0).action(plateau.getJoueurActif(), plateau);;
             }
         });
 
+        // 3 -- Bouton de fin de partie
+        this.bLancerDes = new ModernButton("Lancer les dés",Color.WHITE,Color.BLACK);
+        imagePlateau.add(bLancerDes);
+        bLancerDes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!plateau.getALancerDes()){
+                    plateau.lancerDes();
+                }
+            }
+        });
+
+        /////////// Le joueur en cours ///////////
+        this.joueurActuel = new JLabel();
+        joueurActuel.setBackground(Color.WHITE);
+        joueurActuel.setOpaque(true);
+        joueurActuel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        joueurActuel.setFont(titleFont);
+        imagePlateau.add(joueurActuel);
+
         /////////// Les pions et panneaux joueurs ///////////
-        JoueurMonopoly joueurActuel;
+        JoueurMonopoly joueurCourant;
         this.pions = new Pion[plateau.getNbJoueurs()];
         JPanel joueursPanel = new JPanel(new GridLayout(2, 3, 10, 10));
         // Création d'une bordure avec des marges de 10 pixels
         Border border = BorderFactory.createEmptyBorder(5, 10, 5, 5);
         joueursPanel.setBorder(border);
         for (int i = 0; i < plateau.getNbJoueurs();i++){
-            joueurActuel = plateau.getJoueur(i);
-            pions[i] = joueurActuel.getPion();
+            joueurCourant = plateau.getJoueur(i);
+            pions[i] = joueurCourant.getPion();
             imagePlateau.add(pions[i]);
-            joueursPanel.add(joueurActuel.getPanel());
+            joueursPanel.add(joueurCourant.getPanel());
         }
         this.add(joueursPanel);
     }
@@ -134,10 +151,12 @@ public class VuePlateau extends JFrame {
         }
         this.bFinPartie.setBounds((int) (400 * scaleFactor),(int) (525 * scaleFactor),(int) (130 * scaleFactor),(int) (35 * scaleFactor));
         this.bFinTour.setBounds((int) (540 * scaleFactor),(int) (525 * scaleFactor),(int) (140* scaleFactor),(int) (35 * scaleFactor));
+        this.bLancerDes.setBounds((int) (250 * scaleFactor),(int) (525 * scaleFactor),(int) (140* scaleFactor),(int) (35 * scaleFactor));
+        this.joueurActuel.setBounds((int) (265 * scaleFactor),(int) (350 * scaleFactor),(int) (350* scaleFactor),(int) (35 * scaleFactor));
     }
 
-    /** Mettre à jour l'emplacement d'un pion sur l'imagePlateau dans la VuePlateau
-     * @param pion pion qu'il faut mettre à jour
+    /** Mettre à jour l'emplacement d'un pion sur l'imagePlateau dans la VuePlateau.
+     * @param pion pion qu'il faut mettre à jour.
     */
     public void updatePositionPion(Pion pion){
         int position = pion.getPosition();
@@ -148,5 +167,11 @@ public class VuePlateau extends JFrame {
             }
         }
         pion.updatePosition(nbPionsCase);
+    }
+
+    /** Mettre à jour le nom du joueur actif. */
+    public void updateJoueurActif(){
+        this.joueurActuel.setText("C'est le tour de : " + plateau.getJoueurActif().getNom());
+        this.joueurActuel.setHorizontalAlignment(JLabel.CENTER);
     }
 }

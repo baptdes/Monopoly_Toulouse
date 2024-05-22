@@ -40,6 +40,10 @@ public class Pion extends CerclePanel {
         return joueur.getPosition();
     }
 
+    public Color getCouleur(){
+        return this.couleur;
+    }
+
     /**
      * Calcule la position absolue du pion sur le plateau pour une résolution de 850x850.
      * @param nbCase Le numéro de la case sur laquelle se trouve le pion.

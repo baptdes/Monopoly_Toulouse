@@ -15,5 +15,12 @@ public class MonopolyToulouse {
 
             Plateau plateau = new Plateau(joueurs);
             plateau.afficheFenetre();
+
+        // ------------------Jouer la partie -------------------
+        
+        while (!plateau.partieFinie()){
+            plateau.jouerTour();
+        }
+        
     }
 }

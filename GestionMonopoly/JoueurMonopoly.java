@@ -53,8 +53,8 @@ public class JoueurMonopoly {
         this.services = new ArrayList<>();
         this.proprietes = new HashMap<>();
         this.enPrison = false;
-        this.panneau = new Panneau_joueur(this, argent);
         this.pion = new Pion(this, couleur);
+        this.panneau = new Panneau_joueur(this, argent);
     }
 
     // |||||||||||||||||||| Requêtes ||||||||||||||||||||||
@@ -348,6 +348,7 @@ public class JoueurMonopoly {
             this.debiter(gare.getValeurAchat());
 			gare.setProprietaire(this);
             gares.add(gare);
+            panneau.addGare(gare.getNom());
             return true;
         }
         return false;
@@ -361,6 +362,7 @@ public class JoueurMonopoly {
         this.gares.remove(gare);
         this.crediter((int) (gare.getValeurAchat() * pourcentageReventePropriete));
 		gare.removeProprietaire();
+        panneau.removeGare(gare.getNom());
     }
 
     /**
@@ -376,6 +378,7 @@ public class JoueurMonopoly {
             this.debiter(service.getValeurAchat());
 			service.setProprietaire(this);
             services.add(service);
+            panneau.addService(service.getNom());
             return true;
         }
         return false;
@@ -388,5 +391,6 @@ public class JoueurMonopoly {
     public void vendreService(Service service) {
         this.services.remove(service);
         this.crediter((int) (service.getValeurAchat() * pourcentageReventePropriete));
+        panneau.removeGare(service.getNom());
     }
 }
