@@ -2,13 +2,11 @@ package GestionMonopoly;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.swing.JFrame;
 
 import GestionMonopoly.Cases.*;
-import Interface_graphique.Panneau_joueur;
 import Interface_graphique.VuePlateau;
 import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
@@ -32,6 +30,7 @@ public class Plateau {
     private Case[] cases;
     private int nbTour;
     private boolean tourFini;
+    private boolean aLancerDes = false;
     private VuePlateau fenetrePlateau;
     private JFrame fenetreAction = null;
 
@@ -82,7 +81,7 @@ public class Plateau {
         cases[7] = new CaseChance("Case Chance", 7);
         cases[8] = new Propriete("Rue Saint-Rome", 8,Cyan,100, new int[]{6,12,30,90,270,400,550},50);
         cases[9] = new Propriete("Rue des Filatiers",9,Cyan, 120, new int[]{8,16,40,100,300,450,600}, 50);
-        cases[10] = new CaseVisiteSimple("Visite Simple", this.ID_CASE_VISITE_SIMPLE);
+        cases[10] = new CaseVisiteSimple("Visite Simple", ID_CASE_VISITE_SIMPLE);
         cases[11] = new Propriete("Place Esquirol",11,Pink, 140, new int[]{10,20,50,150,450,625,750}, 100);
         cases[12] = new Service("Compagnie de distribution d'électricité", 12,150);
         cases[13] = new Propriete("Avenue Honoré Serres", 13, Pink, 140, new int[]{10,20,50,150,450,625,750},100);
@@ -112,7 +111,7 @@ public class Plateau {
         cases[37] = new Propriete("Rue d'Alsace-Lorraine",37, Bleu, 350, new int[]{35,70,175,500,1100,1300,1500},200);
         cases[38] = new CaseTaxeLuxe("Taxe de Luxe",38,100);
         cases[39] = new Propriete("Rue du Capitole",39, Bleu, 400, new int[]{50,100,200,600,1400,1700,2000}, 200);
-        cases[40] = new CasePrison("Case Prison", this.ID_CASE_PRISON , 50);
+        cases[40] = new CasePrison("Case Prison", ID_CASE_PRISON , 50);
     }
 
     private void creerCartesChance(){
@@ -247,6 +246,10 @@ public class Plateau {
         return nbBanqueroute >=2; 
     }
 
+    public boolean getALancerDes(){
+        return this.aLancerDes;
+    }
+
     // ||||||||||||||||||||||||| Commandes ||||||||||||||||||||||||||||||
 
     public void setFenetreAction(JFrame fenetre){
@@ -294,10 +297,17 @@ public class Plateau {
         }
     }
 
+    public void lancerDes(){
+        this.aLancerDes = true;
+    }
+
     public void jouerTour(){
         if (!getJoueurActif().estEnPrison()){
+            fenetrePlateau.updateJoueurActif();
             // 1 - Le joueur actif lance les dés
-            this.getDes().lancer();
+            while (!aLancerDes){attendre(1);}
+
+            this.des.lancer();
             JFrame fenetreLancerDes = new FenetreMessageSimple(getJoueurActif().getNom() + " lance les dés ...", Color.white, Color.black);
             setFenetreAction(fenetreLancerDes);
             fenetreLancerDes.setVisible(true);
@@ -311,6 +321,7 @@ public class Plateau {
 
             attendre(2000);
             setFenetreAction(null);
+            aLancerDes = true;
 
             // 3 - Le joueur actif avance
             deplacerJoueurActif(getDes().getResultat());
@@ -319,15 +330,14 @@ public class Plateau {
             // 4 - Activation de l'effet de la case sur laquelle il se trouve
             getCaseJoueurActif().action(getJoueurActif(), this);
 
-            // TODO : Faire l'étape pour vendre ses propriétés
-
             // 5 - Son tour est fini
             while (!tourFini){
                 attendre(1);
             } //Atendre t'en que le joueur ne signifit pas qu'il a terminé
             tourFini = false;
+            aLancerDes = false;
 
-            if (!des.estDouble()){ //Rejoue si il a fai un double
+            if (!des.estDouble()){ //Rejoue si il a fait un double
                 nbTour ++;
                 return;
             }

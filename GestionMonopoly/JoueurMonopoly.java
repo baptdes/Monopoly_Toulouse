@@ -362,6 +362,7 @@ public class JoueurMonopoly {
         this.gares.remove(gare);
         this.crediter((int) (gare.getValeurAchat() * pourcentageReventePropriete));
 		gare.removeProprietaire();
+        panneau.removeGare(gare.getNom());
     }
 
     /**
@@ -377,7 +378,7 @@ public class JoueurMonopoly {
             this.debiter(service.getValeurAchat());
 			service.setProprietaire(this);
             services.add(service);
-            //panneau.addService(service.getNom());
+            panneau.addService(service.getNom());
             return true;
         }
         return false;
@@ -390,5 +391,6 @@ public class JoueurMonopoly {
     public void vendreService(Service service) {
         this.services.remove(service);
         this.crediter((int) (service.getValeurAchat() * pourcentageReventePropriete));
+        panneau.removeGare(service.getNom());
     }
 }

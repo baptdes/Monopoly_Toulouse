@@ -2,7 +2,12 @@ package Interface_graphique.FenetreCases;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
+
 import java.awt.*;
+import java.util.ArrayList;
 
 public class FenetreMessageSimple extends JFrame {
 
