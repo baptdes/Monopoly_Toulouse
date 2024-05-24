@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import GestionMonopoly.JoueurMonopoly;
+import Interface_graphique.Utilitaires.ListeLabel;
+import Interface_graphique.Utilitaires.RoundedPanel;
 
 
 /** Classe qui sert à créer un panneau qui présente les informations d'un joueur */

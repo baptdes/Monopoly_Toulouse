@@ -1,53 +1,21 @@
 package GestionMonopoly.Cases;
 
+import javax.swing.JFrame;
+
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import Interface_graphique.FenetreCases.FenetreAchatCase;
 
 /**
  * La classe CaseService représente une case de type service public (ou compagnie) sur le plateau du Monopoly.
  * Elle hérite de la classe Case.
  */
-public class Service extends Case {
+public class Service extends CaseAchetable {
     
     private final int[] multiplicateurServives = {4, 10}; // Les multiplicateurs de loyer pour les services
-    private JoueurMonopoly proprietaire; // Le joueur qui possède le service
-    private int valeurAchat; // Le prix d'achat du service
     
-    /**
-     * Constructeur de la classe CaseService.
-     * @param nom Le nom du service.
-     * @param id L'identifiant du service sur le plateau.
-     * @param valeurAchat Le prix d'achat du service.
-     */
     public Service(String nom, int id, int valeurAchat) {
-        super(nom, id);
-        assert (valeurAchat > 0 && id > 0);
-        this.valeurAchat = valeurAchat;
-    }
-    
-
-    /**
-     * Obtenir le prix d'achat du service.
-     * @return Le prix d'achat du service.
-     */
-    public int getValeurAchat() {
-        return this.valeurAchat;
-    }
-    
-    /**
-     * Obtenir le propriétaire du service.
-     * @return Le joueur qui possède le service.
-     */
-    public JoueurMonopoly getProprietaire() {
-        return this.proprietaire;
-    }
-    
-    /**
-     * Vérifier si le service est achetable.
-     * @return true si le service est achetable (sans propriétaire), false sinon.
-     */
-    public boolean estAchetable() {
-        return (this.proprietaire == null);
+        super(nom, id,valeurAchat);
     }
 
     /**
@@ -57,29 +25,16 @@ public class Service extends Case {
      * @return Le loyer à payer.
      */
     public int getLoyer(int resultatDes) {
-        if (proprietaire != null && proprietaire.getNbServices() == 2) {
+        if (!estAchetable() && this.getProprietaire().getNbServices() == 2) {
             return resultatDes * multiplicateurServives[1];
         }
         return resultatDes * multiplicateurServives[0];
     }
 
-    /**
-     * Définir le propriétaire du service.
-     * @param proprietaire Le joueur qui devient propriétaire du service.
-     */
-    public void setProprietaire(JoueurMonopoly proprietaire) {
-        this.proprietaire = proprietaire;
-    }
-
-    /**
-     * Retirer le propriétaire du service, le rendant disponible à l'achat.
-     */
-    public void removeProprietaire() {
-        this.proprietaire = null;
-    }
-
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        // TODO : Ecrire l'action associé au service
         System.out.println("Le joueur est tombé sur le service : " + this.getNom());
+        JFrame fenetre = new FenetreAchatCase(joueur, this);
+        plateau.setFenetreAction(fenetre);
+        fenetre.setVisible(true);
     }
 }

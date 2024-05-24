@@ -43,10 +43,6 @@ public class Plateau {
     private GroupeProprietes Jaune = new GroupeProprietes(Color.yellow);
     private GroupeProprietes Vert = new GroupeProprietes(Color.green);
     private GroupeProprietes Bleu = new GroupeProprietes(new Color(29, 33, 128));
-    
-    //TODO : A continuer pour definir les proprietes par la suite
-    // Astuce :  pour avoir les valeurs RGB d'une couleur aller sur ce site :
-    // https://htmlcolorcodes.com/fr/
 
     /**
      * Constructeur de la classe Plateau.

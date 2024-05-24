@@ -5,6 +5,8 @@ import javax.swing.border.Border;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import Interface_graphique.Utilitaires.ModernButton;
+
 import java.awt.*;
 import java.awt.event.*;
 

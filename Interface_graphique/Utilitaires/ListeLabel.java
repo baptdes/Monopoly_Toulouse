@@ -1,9 +1,11 @@
-package Interface_graphique;
+package Interface_graphique.Utilitaires;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
+
+import Interface_graphique.VuePlateau;
 
 public class ListeLabel extends JPanel {
 
