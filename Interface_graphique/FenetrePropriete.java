@@ -1,14 +1,16 @@
-package Interface_graphique;
+package Interface_graphique.FenetreCases;
 
 import javax.swing.*;
 import java.awt.*;
 import GestionMonopoly.*;
+import GestionMonopoly.Cases.Propriete;
+import Interface_graphique.ModernButton;
 
 public class FenetrePropriete extends JFrame {
     private JoueurMonopoly joueur;
-    private CaseTerrain caseTerrain;
+    private Propriete caseTerrain;
 
-    public FenetrePropriete(JoueurMonopoly joueur, CaseTerrain caseTerrain) {
+    public FenetrePropriete(JoueurMonopoly joueur, Propriete caseTerrain) {
         super("Propriété - " + caseTerrain.getNom());
         this.joueur = joueur;
         this.caseTerrain = caseTerrain;
@@ -22,9 +24,13 @@ public class FenetrePropriete extends JFrame {
     private void setupComponents() {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         JLabel label = new JLabel(
-                "Voulez-vous acheter " + caseTerrain.getNom() + " pour " + caseTerrain.getprixachat() + " ?");
-        JButton buyButton = new JButton("Acheter");
-        JButton cancelButton = new JButton("Annuler");
+                "Voulez-vous acheter " + caseTerrain.getNom() + " pour " + caseTerrain.getValeurAchat() + " ?");
+        label.setFont(new Font("DejaVu Sans", Font.PLAIN, 16));
+        label.setHorizontalAlignment(JLabel.CENTER);
+
+        // Utilisation de ModernButton
+        JButton buyButton = new ModernButton("Acheter", Color.WHITE, Color.BLACK);
+        JButton cancelButton = new ModernButton("Annuler", Color.WHITE, Color.BLACK);
 
         buyButton.addActionListener(e -> {
             acheterPropriete();
@@ -38,8 +44,8 @@ public class FenetrePropriete extends JFrame {
     }
 
     private void acheterPropriete() {
-        if (joueur.peutAcheter(caseTerrain)) {
-            joueur.ajouterTerrain(caseTerrain);
+        if (caseTerrain.estAchetable()) {
+            joueur.acheterPropriete(caseTerrain);
             JOptionPane.showMessageDialog(this, "Vous avez acheté " + caseTerrain.getNom(), "Achat réussi",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
