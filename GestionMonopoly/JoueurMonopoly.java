@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GestionMonopoly.Cases.CaseAchetable;
 import GestionMonopoly.Cases.Gare;
 import GestionMonopoly.Cases.GroupeProprietes;
 import GestionMonopoly.Cases.Propriete;
@@ -392,5 +393,15 @@ public class JoueurMonopoly {
         this.services.remove(service);
         this.crediter((int) (service.getValeurAchat() * pourcentageReventePropriete));
         panneau.removeGare(service.getNom());
+    }
+
+    public void acheter(CaseAchetable caseAchetable){
+        if (caseAchetable instanceof Propriete){
+            acheterPropriete((Propriete) caseAchetable);
+        } else if (caseAchetable instanceof Gare) {
+            acheterGare((Gare) caseAchetable);
+        } else {
+            acheterService((Service) caseAchetable);
+        }
     }
 }

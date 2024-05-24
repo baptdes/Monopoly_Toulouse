@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import GestionMonopoly.JoueurMonopoly;
+import Interface_graphique.Utilitaires.CerclePanel;
 
 /**
  * La classe Pion représente un pion de jeu dans l'interface graphique du Monopoly.

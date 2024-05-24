@@ -3,18 +3,19 @@ package GestionMonopoly.Cases;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import Interface_graphique.FenetreCases.FenetreAchatCase;
 
 /**
  * La classe Propriete représente une case porpriété du Monopoly qui peut être achetée et possédée par un joueur.
  * Elle hérite de la classe Case.
  */
-public class Propriete extends Case {
+public class Propriete extends CaseAchetable {
     
-    private JoueurMonopoly proprietaire = null; // Le joueur qui possède la propriété
     private GroupeProprietes groupe; // La groupe auquel la propriété appartient
-    private int valeurAchat; // Le prix d'achat de la propriété
     private int[] loyer; // Les loyers en fonction du nombre de maisons sur la propriété
     private int prixMaison; // Le prix d'une maison sur la propriété
     private int nbMaison = 0; // Le nombre de maisons actuellement sur la propriété
@@ -29,9 +30,7 @@ public class Propriete extends Case {
      * @param id L'identifiant de la propriété sur le plateau.
      */
     public Propriete(String nom, int id, GroupeProprietes groupe, int valeurAchat, int[] loyer, int prixMaison) {
-        super(nom, id);
-        assert (valeurAchat > 0 && groupe != null && prixMaison > 0);
-        this.valeurAchat = valeurAchat;
+        super(nom, id,valeurAchat);
         this.loyer = loyer;
         this.groupe = groupe;
         groupe.addPropriete(this);
@@ -71,45 +70,6 @@ public class Propriete extends Case {
     }
 
     /**
-     * Obtenir le prix d'achat de la propriété.
-     * @return Le prix d'achat de la propriété.
-     */
-    public int getValeurAchat() {
-        return this.valeurAchat;
-    }
-
-    /**
-     * Obtenir le propriétaire de la propriété.
-     * @return Le propriétaire de la propriété.
-     */
-    public JoueurMonopoly getProprietaire() {
-        return this.proprietaire;
-    }
-
-    /**
-     * Définir le propriétaire de la propriété.
-     * @param proprietaire Le joueur qui devient propriétaire de la propriété.
-     */
-    public void setProprietaire(JoueurMonopoly proprietaire) {
-        this.proprietaire = proprietaire;
-    }
-
-	/**
-     * Enleve le propriétaire de la propriété.
-     */
-    public void removeProprietaire() {
-        this.proprietaire = null;
-    }
-
-    /**
-     * Vérifier si la propriété est achetable.
-     * @return true si la propriété est achetable (sans propriétaire), false sinon.
-     */
-    public boolean estAchetable() {
-        return (this.proprietaire == null);
-    }
-
-    /**
      * Ajouter une maison sur la propriété si possible.
      * @return true si la maison a été ajoutée avec succès, false sinon.
      */
@@ -142,8 +102,10 @@ public class Propriete extends Case {
     }
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        // TODO : Ecrire l'action associé la propriété
         System.out.println("Le joueur est tombé sur la propiété : " + this.getNom());
+        JFrame fenetrePropriete = new FenetreAchatCase(joueur, this);
+        plateau.setFenetreAction(fenetrePropriete);
+        fenetrePropriete.setVisible(true);
     }
 
 	// |||||||||||||||||||| Annexe ||||||||||||||||||||||||||

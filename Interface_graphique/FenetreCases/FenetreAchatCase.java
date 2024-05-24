@@ -3,19 +3,19 @@ package Interface_graphique.FenetreCases;
 import javax.swing.*;
 import java.awt.*;
 import GestionMonopoly.*;
-import GestionMonopoly.Cases.Propriete;
-import Interface_graphique.ModernButton;
+import GestionMonopoly.Cases.*;
+import Interface_graphique.Utilitaires.ModernButton;
 
-public class FenetrePropriete extends JFrame {
+public class FenetreAchatCase extends JFrame {
     private JoueurMonopoly joueur;
-    private Propriete caseTerrain;
+    private CaseAchetable caseAchetable;
 
-    public FenetrePropriete(JoueurMonopoly joueur, Propriete caseTerrain) {
-        super("Propriété - " + caseTerrain.getNom());
+    public FenetreAchatCase(JoueurMonopoly joueur, CaseAchetable caseAchetable) {
+        super("Propriété - " + caseAchetable.getNom());
         this.joueur = joueur;
-        this.caseTerrain = caseTerrain;
+        this.caseAchetable = caseAchetable;
 
-        setSize(400, 200);
+        setSize(600, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setupComponents();
@@ -24,16 +24,17 @@ public class FenetrePropriete extends JFrame {
     private void setupComponents() {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         JLabel label = new JLabel(
-                "Voulez-vous acheter " + caseTerrain.getNom() + " pour " + caseTerrain.getValeurAchat() + " ?");
-        label.setFont(new Font("DejaVu Sans", Font.PLAIN, 16));
+                "Voulez-vous acheter " + caseAchetable.getNom() + " pour " + caseAchetable.getValeurAchat() + " ?");
+        label.setFont(new Font("Arial", Font.BOLD, 18));
         label.setHorizontalAlignment(JLabel.CENTER);
 
         // Utilisation de ModernButton
-        JButton buyButton = new ModernButton("Acheter", Color.WHITE, Color.BLACK);
-        JButton cancelButton = new ModernButton("Annuler", Color.WHITE, Color.BLACK);
+        JButton buyButton = new ModernButton("Acheter", new Color(40, 180, 99), Color.BLACK);
+        JButton cancelButton = new ModernButton("Annuler", new Color(253, 237, 236), Color.BLACK);
 
         buyButton.addActionListener(e -> {
-            acheterPropriete();
+            acheter();
+            dispose();
         });
         cancelButton.addActionListener(e -> dispose());
 
@@ -43,10 +44,10 @@ public class FenetrePropriete extends JFrame {
         add(panel);
     }
 
-    private void acheterPropriete() {
-        if (caseTerrain.estAchetable()) {
-            joueur.acheterPropriete(caseTerrain);
-            JOptionPane.showMessageDialog(this, "Vous avez acheté " + caseTerrain.getNom(), "Achat réussi",
+    private void acheter() {
+        if (caseAchetable.estAchetable()) {
+            joueur.acheter(caseAchetable);
+            JOptionPane.showMessageDialog(this, "Vous avez acheté " + caseAchetable.getNom(), "Achat réussi",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Achat impossible. Fonds insuffisants ou propriété déjà achetée.",
