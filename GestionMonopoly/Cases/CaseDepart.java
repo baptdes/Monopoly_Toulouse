@@ -23,7 +23,7 @@ public class CaseDepart extends Case {
         joueur.crediter(this.montant);
 
         // Ouvrir la fenêtre pour informer le joueur
-        FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " est passé par la case départ \n et a reçu " + this.montant + "!", new Color(0xd5f5e3), Color.BLACK);
+        FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " est passé par la case départ \n et a reçu " + this.montant + "€ !", new Color(0xd5f5e3), Color.BLACK);
         plateau.setFenetreAction(fenetre);
         fenetre.setVisible(true);
     }
