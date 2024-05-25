@@ -298,8 +298,8 @@ public class Plateau {
     }
 
     public void jouerTour(){
+        fenetrePlateau.updateJoueurActif();
         if (!getJoueurActif().estEnPrison()){
-            fenetrePlateau.updateJoueurActif();
             // 1 - Le joueur actif lance les dés
             while (!aLancerDes){attendre(1);}
 
@@ -343,6 +343,14 @@ public class Plateau {
             fenetreDouble.setVisible(true);
             attendre(1000);
             setFenetreAction(null);
+        } else {
+            getCase(ID_CASE_PRISON).action(getJoueurActif(), this);
+            // 5 - Son tour est fini
+            while (!tourFini){
+                attendre(1);
+            } //Atendre t'en que le joueur ne signifit pas qu'il a terminé
+            tourFini = false;
+            nbTour ++;
         }
     }
 }
