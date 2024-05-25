@@ -21,7 +21,11 @@ public class CaseDirectionPrison extends Case {
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
         System.out.println(joueur.getNom() + " est envoyé en prison. ");
+        joueur.setEstEnPrison(true);
+        joueur.resetToursEnPrison();
         joueur.setPosition(Plateau.ID_CASE_PRISON);
+        plateau.setPositionJoueur(joueur, Plateau.ID_CASE_PRISON);
+
         
         // Ouvrir la fenêtre pour informer le joueur
         FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + ", vous êtes en état d'arrestation ! \n Direction la prison.", new Color(0xd5f5e3), Color.BLACK);
