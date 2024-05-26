@@ -119,10 +119,10 @@ public class Panneau_joueur extends RoundedPanel {
     }
 
     public void addService(String service){
-        this.garesPanel.addList(service);
+        this.servicesPanel.addList(service);
     }
 
     public void removeService(String service){
-        this.garesPanel.removeList(service);
+        this.servicesPanel.removeList(service);
     }
 }
