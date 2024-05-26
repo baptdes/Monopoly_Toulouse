@@ -8,6 +8,8 @@ import javax.swing.JFrame;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 import Interface_graphique.FenetreCases.FenetreAchatCase;
+import Interface_graphique.FenetreCases.FenetreAchatMaison;
+import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
 /**
  * La classe Propriete représente une case porpriété du Monopoly qui peut être achetée et possédée par un joueur.
@@ -103,9 +105,29 @@ public class Propriete extends CaseAchetable {
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
         System.out.println("Le joueur est tombé sur la propiété : " + this.getNom());
-        JFrame fenetrePropriete = new FenetreAchatCase(joueur, this);
-        plateau.setFenetreAction(fenetrePropriete);
-        fenetrePropriete.setVisible(true);
+
+        if (this.estAchetable()) {
+            JFrame fenetrePropriete = new FenetreAchatCase(joueur, this);
+            plateau.setFenetreAction(fenetrePropriete);
+            fenetrePropriete.setVisible(true);
+        } 
+        else if (this.getProprietaire() == joueur) {
+            if (this.peutMettreMaison() && joueur.possedeGroupe(this.getGroupe())) {
+                JFrame fenetrePropriete = new FenetreAchatMaison(joueur, this);
+                plateau.setFenetreAction(fenetrePropriete);
+                fenetrePropriete.setVisible(true);
+            }
+        }
+        else {
+            joueur.debiter(this.getLoyer());
+
+            // Ouvrir la fenêtre pour informer le joueur
+            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer() + "€ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
+            plateau.setFenetreAction(fenetre);
+            fenetre.setVisible(true);
+
+        }
+
     }
 
 	// |||||||||||||||||||| Annexe ||||||||||||||||||||||||||

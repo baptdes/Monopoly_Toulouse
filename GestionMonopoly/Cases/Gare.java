@@ -1,10 +1,15 @@
 package GestionMonopoly.Cases;
 
+
+import java.awt.Color;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 import Interface_graphique.FenetreCases.FenetreAchatCase;
+import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
 /**
  * La classe CaseGare représente une case de type gare sur le plateau du Monopoly.
@@ -38,8 +43,18 @@ public class Gare extends CaseAchetable {
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
         System.out.println("Le joueur est tombé sur la gare : " + this.getNom());
-        JFrame fenetre = new FenetreAchatCase(joueur, this);
-        plateau.setFenetreAction(fenetre);
-        fenetre.setVisible(true);
+
+        if (this.estAchetable()) {
+            JFrame fenetre = new FenetreAchatCase(joueur, this);
+            plateau.setFenetreAction(fenetre);
+            fenetre.setVisible(true);
+        } else if (!(this.getProprietaire() == joueur)){
+            joueur.debiter(this.getLoyer());
+
+            // Ouvrir la fenêtre pour informer le joueur
+            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer() + "€ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
+            plateau.setFenetreAction(fenetre);
+            fenetre.setVisible(true);
+        }
     }
 }

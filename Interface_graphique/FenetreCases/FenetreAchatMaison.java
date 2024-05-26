@@ -6,15 +6,17 @@ import GestionMonopoly.*;
 import GestionMonopoly.Cases.*;
 import Interface_graphique.Utilitaires.ModernButton;
 
-public class FenetreAchatCase extends JFrame {
+public class FenetreAchatMaison extends JFrame {
+    
     private JoueurMonopoly joueur;
-    private CaseAchetable caseAchetable;
+    private Propriete propriete;
 
-    public FenetreAchatCase(JoueurMonopoly joueur, CaseAchetable caseAchetable) {
-        super("Propriété - " + caseAchetable.getNom());
+
+    public FenetreAchatMaison(JoueurMonopoly joueur, Propriete propriete) {
+        super("Propriété - " + propriete.getNom());
         this.joueur = joueur;
-        this.caseAchetable = caseAchetable;
-
+        this.propriete = propriete;
+    
         setSize(600, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -24,7 +26,7 @@ public class FenetreAchatCase extends JFrame {
     private void setupComponents() {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         JLabel label = new JLabel(
-                "Voulez-vous acheter " + caseAchetable.getNom() + " pour " + caseAchetable.getValeurAchat() + "€ ?");
+                "Voulez-vous acheter une maison pour " + propriete.getPrixMaison() + "€ ?");
         label.setFont(new Font("Arial", Font.BOLD, 18));
         label.setHorizontalAlignment(JLabel.CENTER);
 
@@ -45,12 +47,11 @@ public class FenetreAchatCase extends JFrame {
     }
 
     private void acheter() {
-        if (caseAchetable.estAchetable()) {
-            joueur.acheter(caseAchetable);
-            JOptionPane.showMessageDialog(this, "Vous avez acheté " + caseAchetable.getNom(), "Achat réussi",
-                    JOptionPane.INFORMATION_MESSAGE);
+        if (propriete.peutMettreMaison() && joueur.possedeGroupe(propriete.getGroupe())) {
+            joueur.acheterMaison(propriete);
+            JOptionPane.showMessageDialog(this, "Vous avez acheté une maison ", "Achat réussi", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(this, "Achat impossible. Fonds insuffisants ou propriété déjà achetée.",
+            JOptionPane.showMessageDialog(this, "Achat impossible. Fonds insuffisants.",
                     "Achat échoué", JOptionPane.ERROR_MESSAGE);
         }
         dispose(); // Ferme la fenêtre après l'interaction
