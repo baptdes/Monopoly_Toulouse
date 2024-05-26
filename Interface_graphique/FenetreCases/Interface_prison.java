@@ -1,16 +1,16 @@
-package Interface_graphique;
+package Interface_graphique.FenetreCases;
 
 import javax.swing.*;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import Interface_graphique.Utilitaires.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class Interface_prison extends JFrame {
 
-	public Interface_prison(JoueurMonopoly joueur, Plateau plateau) {
+	public Interface_prison(JoueurMonopoly joueur, Plateau plateau, int amende) {
         super("Prison");
         joueur.addToursEnPrison();
         System.out.print("Tour " + joueur.getToursPrison()+ ": ");
@@ -51,7 +51,7 @@ public class Interface_prison extends JFrame {
         payerAmendeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                payerAmende(plateau,joueur);
+                payerAmende(plateau,joueur,amende);
             }
         });
 
@@ -65,12 +65,13 @@ public class Interface_prison extends JFrame {
         }
     }
 
-    private void payerAmende(Plateau plateau, JoueurMonopoly joueur){
+    private void payerAmende(Plateau plateau, JoueurMonopoly joueur, int amende){
         JOptionPane.showMessageDialog(this, joueur.getNom() + " paye l'amende pour s'échapper de la prison.",
             "Résultat dés",
             JOptionPane.INFORMATION_MESSAGE);
-        joueur.debiter(50); // Supposons que l'amende est de 50$
+        joueur.debiter(amende); // Supposons que l'amende est de 50$
         sortirJoueurPrison(joueur, plateau);
+        this.dispose();
     }
 
     private void cartePrison(Plateau plateau, JoueurMonopoly joueur){
@@ -79,12 +80,13 @@ public class Interface_prison extends JFrame {
             JOptionPane.INFORMATION_MESSAGE);
         joueur.removeCarteSortiePrison();
         sortirJoueurPrison(joueur, plateau);
+        this.dispose();
     }
 
     private void lancerDes(Plateau plateau, JoueurMonopoly joueur) {
         System.out.println("Vous lancez les dés ...");
         plateau.getDes().lancer();
-        JOptionPane.showMessageDialog(this, "Vous avez fait " + plateau.getDes().getDe1() + " et " +  plateau.getDes().getDe1(),
+        JOptionPane.showMessageDialog(this, "Vous avez fait " + plateau.getDes().getDe1() + " et " +  plateau.getDes().getDe2(),
             "Résultat dés",
             JOptionPane.INFORMATION_MESSAGE);
         plateau.attendre(1000);
@@ -98,13 +100,14 @@ public class Interface_prison extends JFrame {
             "Dommage",
             JOptionPane.INFORMATION_MESSAGE);
         }
+        this.dispose();
     }
 
 	private void sortirJoueurPrison(JoueurMonopoly joueur, Plateau plateau) {
 	        System.out.println(joueur.getNom() + " sort de prison.");
 	        joueur.setEstEnPrison(false);
 	        joueur.resetToursEnPrison();
-	        plateau.deplacerJoueur(joueur, Plateau.ID_CASE_VISITE_SIMPLE);
+	        plateau.setPositionJoueur(joueur, Plateau.ID_CASE_VISITE_SIMPLE);
 	}
 }
 
