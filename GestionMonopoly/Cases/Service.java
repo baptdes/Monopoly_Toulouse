@@ -1,10 +1,15 @@
 package GestionMonopoly.Cases;
 
+
+import java.awt.Color;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 import Interface_graphique.FenetreCases.FenetreAchatCase;
+import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
 /**
  * La classe CaseService représente une case de type service public (ou compagnie) sur le plateau du Monopoly.
@@ -32,9 +37,11 @@ public class Service extends CaseAchetable {
     }
 
     public void action(JoueurMonopoly joueur, Plateau plateau) {
-        System.out.println("Le joueur est tombé sur le service : " + this.getNom());
-        JFrame fenetre = new FenetreAchatCase(joueur, this);
-        plateau.setFenetreAction(fenetre);
-        fenetre.setVisible(true);
+        if (this.estAchetable()) {
+            System.out.println("Le joueur est tombé sur le service : " + this.getNom());
+            JFrame fenetre = new FenetreAchatCase(joueur, this);
+            plateau.setFenetreAction(fenetre);
+            fenetre.setVisible(true);
+        } 
     }
 }
