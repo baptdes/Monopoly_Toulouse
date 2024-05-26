@@ -23,7 +23,6 @@ public class CaseDirectionPrison extends Case {
         System.out.println(joueur.getNom() + " est envoyé en prison. ");
         joueur.setEstEnPrison(true);
         joueur.resetToursEnPrison();
-        joueur.setPosition(Plateau.ID_CASE_PRISON);
         plateau.setPositionJoueur(joueur, Plateau.ID_CASE_PRISON);
 
         

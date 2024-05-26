@@ -3,7 +3,6 @@ package Interface_graphique;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
 import GestionMonopoly.JoueurMonopoly;
 import Interface_graphique.Utilitaires.ListeLabel;
 import Interface_graphique.Utilitaires.RoundedPanel;
@@ -21,7 +20,6 @@ public class Panneau_joueur extends RoundedPanel {
     private ListeLabel proprietesPanel;
     private ListeLabel servicesPanel;
     private ListeLabel garesPanel;
-    private JoueurMonopoly joueur;
     
     /** Méthode pour créer le JPanel d'un joueur avec son nom, son argent et ses propriétés 
      * @param nomJoueur Nom du joueur

@@ -1,8 +1,6 @@
 package Interface_graphique;
 
 import java.awt.*;
-import javax.swing.*;
-
 import GestionMonopoly.JoueurMonopoly;
 import Interface_graphique.Utilitaires.CerclePanel;
 

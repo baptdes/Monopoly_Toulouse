@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import GestionMonopoly.Cases.CaseAchetable;
 
 public class MonopolyToulouse {
     public static void main(String[] args) {

@@ -84,7 +84,7 @@ public class VuePlateau extends JFrame {
         bFinPartie.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                plateau.getJoueurActif().setEstEnPrison(true);
+                System.exit(0);
             }
         });
 

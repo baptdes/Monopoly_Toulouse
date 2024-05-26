@@ -1,10 +1,8 @@
 package GestionMonopoly.Cases;
 
-
 import java.awt.Color;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
@@ -42,11 +40,14 @@ public class Service extends CaseAchetable {
             JFrame fenetre = new FenetreAchatCase(joueur, this);
             plateau.setFenetreAction(fenetre);
             fenetre.setVisible(true);
-        } else if (!(this.getProprietaire() == joueur)){
+        } else if (this.getProprietaire() != joueur){
             joueur.debiter(this.getLoyer(plateau.getDes().getResultat()));
-
+            System.out.println("Vous lancez les dés ...");
+            plateau.getDes().lancer();
             // Ouvrir la fenêtre pour informer le joueur
-            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer(plateau.getDes().getResultat()) + "€ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
+            FenetreMessageSimple fenetre = new FenetreMessageSimple(
+                "Vous avez fait " + plateau.getDes().getResultat() + " aux dés " + "\n" + 
+                joueur.getNom() + " paie " + this.getLoyer(plateau.getDes().getResultat()) + "M$ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
             plateau.setFenetreAction(fenetre);
             fenetre.setVisible(true);
         }

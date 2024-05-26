@@ -248,6 +248,10 @@ public class Plateau {
 
     // ||||||||||||||||||||||||| Commandes ||||||||||||||||||||||||||||||
 
+    public void addTour(){
+        this.nbTour++;
+    }
+
     public void setFenetreAction(JFrame fenetre){
         if (this.fenetreAction != null){
             this.fenetreAction.dispose();

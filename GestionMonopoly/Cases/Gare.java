@@ -2,10 +2,7 @@ package GestionMonopoly.Cases;
 
 
 import java.awt.Color;
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
-
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 import Interface_graphique.FenetreCases.FenetreAchatCase;
@@ -52,7 +49,7 @@ public class Gare extends CaseAchetable {
             joueur.debiter(this.getLoyer());
 
             // Ouvrir la fenêtre pour informer le joueur
-            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer() + "€ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
+            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer() + "M$ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
             plateau.setFenetreAction(fenetre);
             fenetre.setVisible(true);
         }
