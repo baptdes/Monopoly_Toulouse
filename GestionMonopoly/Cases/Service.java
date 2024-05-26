@@ -42,6 +42,13 @@ public class Service extends CaseAchetable {
             JFrame fenetre = new FenetreAchatCase(joueur, this);
             plateau.setFenetreAction(fenetre);
             fenetre.setVisible(true);
-        } 
+        } else if (!(this.getProprietaire() == joueur)){
+            joueur.debiter(this.getLoyer(plateau.getDes().getResultat()));
+
+            // Ouvrir la fenêtre pour informer le joueur
+            FenetreMessageSimple fenetre = new FenetreMessageSimple(joueur.getNom() + " paie " + this.getLoyer(plateau.getDes().getResultat()) + "€ de loyer à " + this.getProprietaire().getNom() + " !", new Color(0xd5f5e3), Color.BLACK);
+            plateau.setFenetreAction(fenetre);
+            fenetre.setVisible(true);
+        }
     }
 }
