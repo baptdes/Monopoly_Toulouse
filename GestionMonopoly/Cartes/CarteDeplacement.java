@@ -1,4 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cartes;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 /**
  * La classe CarteDeplacement représente une carte qui déplace un joueur sur le plateau de jeu dans le Monopoly.

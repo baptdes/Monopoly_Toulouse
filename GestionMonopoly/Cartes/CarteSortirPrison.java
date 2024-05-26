@@ -1,4 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cartes;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 /**
  * La classe CarteSortirPrison représente une carte permettant à un joueur de sortir de prison dans le Monopoly.

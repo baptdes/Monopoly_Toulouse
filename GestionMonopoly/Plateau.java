@@ -6,6 +6,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import GestionMonopoly.Cartes.Carte;
+import GestionMonopoly.Cartes.CarteArgent;
 import GestionMonopoly.Cases.*;
 import Interface_graphique.VuePlateau;
 import Interface_graphique.FenetreCases.FenetreMessageSimple;

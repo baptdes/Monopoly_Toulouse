@@ -1,8 +1,8 @@
 package GestionMonopoly.Cases;
 
-import GestionMonopoly.Carte;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import GestionMonopoly.Cartes.Carte;
 
 /**
  * La classe {@code CaseCommunaute} représente une case de type "Communauté" dans le jeu de Monopoly.

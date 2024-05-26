@@ -1,4 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cartes;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 /**
  * La classe abstraite Carte représente une carte dans le Monopoly.

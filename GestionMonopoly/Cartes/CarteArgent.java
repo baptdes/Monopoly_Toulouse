@@ -1,4 +1,7 @@
-package GestionMonopoly;
+package GestionMonopoly.Cartes;
+
+import GestionMonopoly.JoueurMonopoly;
+import GestionMonopoly.Plateau;
 
 /**
  * La classe CarteArgent représente une carte qui donne ou retire de l'argent à un joueur dans le Monopoly.

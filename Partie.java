@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
 
-public class MonopolyToulouse {
+public class Partie {
     public static void main(String[] args) {
         // ----------------- Set-up du jeu ---------------------    
             // Création des joueurs
