@@ -1,7 +1,10 @@
 package GestionMonopoly.Cartes;
 
+import java.awt.Color;
+
 import GestionMonopoly.JoueurMonopoly;
 import GestionMonopoly.Plateau;
+import Interface_graphique.FenetreCases.FenetreMessageSimple;
 
 /**
  * La classe CarteDeplacement représente une carte qui déplace un joueur sur le plateau de jeu dans le Monopoly.
@@ -30,6 +33,8 @@ public class CarteDeplacement extends Carte {
     @Override
     public void actionCarte(JoueurMonopoly joueur, Plateau plateau){
         plateau.deplacerJoueur(joueur, this.deplacement);
-        // TODO : A compléter pour afficher une fenêtre qui présente la carte
+        FenetreMessageSimple fenetre = new FenetreMessageSimple(this.getDescription(), new Color(0xd5f5e3), Color.BLACK);
+        plateau.setFenetreAction(fenetre);
+        fenetre.setVisible(true);
     }
 }

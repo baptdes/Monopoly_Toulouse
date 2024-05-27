@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 
 import GestionMonopoly.Cartes.Carte;
 import GestionMonopoly.Cartes.CarteArgent;
+import GestionMonopoly.Cartes.CarteDeplacement;
 import GestionMonopoly.Cases.*;
 import Interface_graphique.VuePlateau;
 import Interface_graphique.FenetreCases.FenetreMessageSimple;
@@ -19,8 +20,8 @@ import Interface_graphique.FenetreCases.FenetreMessageSimple;
 public class Plateau {
 
     private final int nbFaces = 6;
-    private final int nbCartesChance = 1;
-    private final int nbCarteCommunaute = 1;
+    private final int nbCartesChance = 4;
+    private final int nbCarteCommunaute = 3;
     public static final int NB_CASES = 41;
     public static final int ID_CASE_PRISON = 40;
     public static final int ID_CASE_VISITE_SIMPLE = 10;
@@ -114,10 +115,15 @@ public class Plateau {
 
     private void creerCartesChance(){
         cartesChance[0] = new CarteArgent("Chanceux", "Vous avez trouver une liasse de billet par terre", 100);
+        cartesChance[1] = new CarteArgent("Chanceux", "C'est votre anniversaire ! Recevez 10", 10);
+        cartesChance[2] = new CarteDeplacement("Chanceux", "Avancer jusqu’à la case départ", 0);
+        cartesChance[3] = new CarteDeplacement("Chanceux", "Avancer jusqu’à la Rue du Capitole", 39);
     }
 
     private void creerCartesCommunaute(){
-        cartesCommunaute[0] = new CarteArgent("Quartier", "Votre quartier veut rénover votre rue, vous devez participer à hauteur de 200 M$", 200);
+        cartesCommunaute[0] = new CarteArgent("Quartier", " Vous avez gagné à la loterie municipale ! Recevez 100 M$.", 100);
+        cartesCommunaute[1] = new CarteDeplacement("Quartier", " Direction la prison ! ", 30);
+        cartesCommunaute[2] = new CarteDeplacement("Quartier", " Avancez jusqu'à la case Impots sur le revenu  ", 4);
     }
 
     // ||||||||||||||||||||||||| Requêtes ||||||||||||||||||||||||||||||
@@ -130,6 +136,7 @@ public class Plateau {
     public Case getCase(int position) {
         return cases[position];
     }
+    
 
     /**
      * Récupère les dés associées au plateau.
@@ -265,6 +272,7 @@ public class Plateau {
         int oldPosition = joueur.getPosition();
         joueur.deplacer(deplacement);
         fenetrePlateau.updatePositionPion(joueur.getPion());
+        this.getCase(deplacement).action(joueur, this);
         if (oldPosition > joueur.getPosition()){
             getCase(0).action(joueur, this);
         }
